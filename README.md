@@ -8,7 +8,7 @@
 
 ## Vista previa
 
-![GSView - Previewer en funcionamiento](docs/screenshot.png)
+![GSView - Previewer en funcionamiento](assets/ScreenShot_1.png)
 
 *Ventana del previewer mostrando un informe de Venta Física multipágina, con barra de herramientas completa, panel lateral de páginas, zoom configurado en "Page Width" y botones de exportación a PDF, TXT, HTML, XML, PNG y XLS.*
 
