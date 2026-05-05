@@ -6,6 +6,14 @@
 
 ---
 
+## Vista previa
+
+![GSView - Previewer en funcionamiento](docs/screenshot.png)
+
+*Ventana del previewer mostrando un informe de Venta Física multipágina, con barra de herramientas completa, panel lateral de páginas, zoom configurado en "Page Width" y botones de exportación a PDF, TXT, HTML, XML, PNG y XLS.*
+
+---
+
 ## ¿Qué hace?
 
 `gsview.dll` es una DLL reutilizable para Clarion que provee una ventana de previsualización de informes multipágina basada en archivos WMF (Windows Metafile). Expone una única función de alto nivel (`ITPreViewer`) que recibe una cola de archivos de imagen —uno por página del informe— y presenta al usuario una interfaz completa con:
