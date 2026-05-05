@@ -1,0 +1,54 @@
+﻿<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <ProjectGuid>{A60F4B27-562C-4433-89CE-696289DD5846}</ProjectGuid>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">Win32</Platform>
+    <OutputType>Library</OutputType>
+    <RootNamespace>gsview</RootNamespace>
+    <AssemblyName>gsview</AssemblyName>
+    <OutputName>gsview</OutputName>
+    <CWOutputType>Exe</CWOutputType>
+    <DefineConstants>maincode=&gt;off%3b_ABCDllMode_=&gt;0%3b_ABCLinkMode_=&gt;1</DefineConstants>
+    <Model>Dll</Model>
+    <stack_size>16384</stack_size>
+    <CopyCore>False</CopyCore>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">
+    <DebugSymbols>True</DebugSymbols>
+    <DebugType>Full</DebugType>
+    <vid>full</vid>
+    <check_stack>True</check_stack>
+    <check_index>True</check_index>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)' == 'Release' ">
+    <DebugSymbols>False</DebugSymbols>
+    <DebugType>None</DebugType>
+    <vid>off</vid>
+    <check_stack>False</check_stack>
+    <check_index>False</check_index>
+    <warnings>on</warnings>
+    <GenerateMap>False</GenerateMap>
+    <line_numbers>False</line_numbers>
+    <dynamic_base>True</dynamic_base>
+    <dep>True</dep>
+  </PropertyGroup>
+  <ItemGroup>
+    <FileDriver Include="ASCII" />
+    <FileDriver Include="DOS" />
+    <Compile Include="gsview.clw">
+      <Generated>true</Generated>
+    </Compile>
+    <Compile Include="gsview001.clw">
+      <Generated>true</Generated>
+    </Compile>
+    <Compile Include="GSVIEW_BC.CLW">
+      <Generated>true</Generated>
+    </Compile>
+    <Compile Include="gsview_BC0.CLW">
+      <Generated>true</Generated>
+    </Compile>
+    <Library Include="gsview.EXE.manifest" />
+    <Library Include="\source\osg\access\access.lib" />
+  </ItemGroup>
+  <Import Project="$(ClarionBinPath)\SoftVelocity.Build.Clarion.targets" />
+</Project>
