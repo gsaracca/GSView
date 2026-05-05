@@ -1,0 +1,2 @@
+  MODULE('GSVIEW001.CLW')
+  END
