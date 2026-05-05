@@ -156,6 +156,26 @@ Al inicializar la ventana la DLL realiza los siguientes pasos sobre los archivos
 
 > Este mecanismo garantiza que el proceso de impresión encuentra los archivos con el nombre exacto embebido en el informe Clarion, independientemente del formato original.
 
+### Eliminación de archivos temporales vía API de Windows
+
+Clarion presenta un problema conocido al eliminar archivos temporales generados durante la impresión de informes: el mecanismo nativo resulta lento y en algunos casos deja archivos sin eliminar al cerrar la previsualización. Para resolver esto, la DLL llama directamente a la API de Windows `DeleteFileA` en lugar de usar las funciones de Clarion:
+
+```clarion
+MODULE('WinAPI')
+    API_DeleteFile(*cstring dfilename), BOOL, RAW, PASCAL, PROC, NAME('deletefileA')
+END
+```
+
+El wrapper interno `DeleteFile` invoca esta API en cada archivo a eliminar:
+
+```clarion
+DeleteFile  procedure( *cstring _fname )
+  CODE
+  rc = API_DeleteFile( _fname )
+```
+
+Esta llamada directa a `kernel32.dll` es significativamente más rápida que la eliminación nativa de Clarion porque evita la capa de abstracción del runtime. El resultado es un cierre de la ventana de previsualización prácticamente inmediato, incluso con informes de muchas páginas.
+
 ### Renderizado de páginas
 
 La DLL usa un control `IMAGE` de Clarion (`PROP:Text`) para mostrar cada página. Al cambiar de página simplemente actualiza el path del control y llama a `SetPosition` para escalar la imagen según el zoom actual y el área disponible de la ventana.
