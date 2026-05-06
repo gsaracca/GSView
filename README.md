@@ -1,6 +1,7 @@
 # GSView — DLL de Previsualización de Informes para Clarion
 
 **Autor:** Gustavo Saracca  
+**Contacto:** gustavo@gmail.com
 **Año:** 2024  
 **Plataforma:** Clarion (CW12+), Windows
 
