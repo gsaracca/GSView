@@ -20,6 +20,7 @@
 
 `gsview.dll` es una DLL reutilizable para Clarion que provee una ventana de previsualización de informes multipágina basada en archivos WMF (Windows Metafile). Expone una única función de alto nivel (`ITPreViewer`) que recibe una cola de archivos de imagen —uno por página del informe— y presenta al usuario una interfaz completa con:
 
+- Se creó para ser un reemplazo del ITPreViewer en código y no es un Template.
 - Navegación entre páginas (primero / anterior / siguiente / último, PgUp/PgDn)
 - Zoom configurable (acercar, alejar, ajustar al ancho, ajustar al alto, 100%)
 - Panel lateral de lista de páginas (toggle on/off)
