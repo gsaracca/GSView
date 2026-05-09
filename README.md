@@ -4,6 +4,7 @@
 **Contacto:** gustavo@gmail.com
 
 **Año:** 2024 - 2026
+
 **Plataforma:** Clarion 6.3 / 10 / 11 / 12, Windows
 
 ---
