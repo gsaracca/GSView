@@ -36,9 +36,6 @@
 
 ```
 GSView/
-├── Clarion100.red       — Archivo de redirección para Clarion 10
-├── Clarion110.red       — Archivo de redirección para Clarion 11
-├── Clarion120.red       — Archivo de redirección para Clarion 12
 ├── gsview.prj           — Proyecto para Clarion 6.3
 ├── gsview.cwproj        — Proyecto Clarion (compilación directa, sin App)
 ├── gsview.sln           — Solución Clarion
@@ -85,17 +82,9 @@ El proyecto se compila directamente desde el IDE de Clarion sin necesitar un arc
 | `gsview.prj` | Clarion 6.3 |
 | `gsview.cwproj` / `gsview.sln` | Clarion 10 / 11 / 12 |
 
-### Archivos de redirección por versión
+### Archivos de redirección:
 
-Cada versión de Clarion utiliza su propio archivo de redirección ubicado en la raíz del proyecto:
-
-| Archivo | Versión |
-|---|---|
-| `Clarion100.red` | Clarion 10 |
-| `Clarion110.red` | Clarion 11 |
-| `Clarion120.red` | Clarion 12 |
-
-Los tres archivos definen las mismas rutas de redirección:
+Deben incluir estas modificaciones y agregar estos paths a los datos actuales.
 
 ```
 *.inc = libsrc
