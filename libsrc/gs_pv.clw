@@ -9,8 +9,8 @@
     map
         include('GS_PV.inc'),once
     end !* map *
-   include('KeyCodes.clw'),once
-   include('ABWINDOW.INC'),once
+	include('KeyCodes.clw'),once
+   	include('ABWINDOW.INC'),once
 
 GSPreViewer procedure( *Queue pImageQueue, short pZoom, byte pMaximize, string pWindowCaption, byte pStartPageList, <*ReportTargetSelectorClass pTargetSelector> )
 ! -------------------------------------------------------------------------------------------------
@@ -25,7 +25,7 @@ GSPreViewer procedure( *Queue pImageQueue, short pZoom, byte pMaximize, string p
 ! -------------------------------------------------------------------------------------------------
 ! CONST
 ! -------------------------------------------------------------------------------------------------
-GS_EVENT:Sized      EQUATE(501h)
+GS_EVENT:Sized      	EQUATE(501h)
 
 ! -------------------------------------------------------------------------------------------------
 ! PROJECT - LINK - RESOURCE FILES 
@@ -39,12 +39,12 @@ ICON_CHECK_OFF          equate('~check_off.ico')
 ! -------------------------------------------------------------------------------------------------   
 ! DATA for Window
 ! -------------------------------------------------------------------------------------------------
-WD                  GROUP,PRE(WD)
-CurrentPage             long
-Percent                 long
-SearchString            cstring(255)
-ShowPageList            byte
-                    END !* group *
+WD                  	group,pre(WD)
+CurrentPage             	long
+Percent                 	long
+SearchString            	cstring(255)
+ShowPageList            	byte
+                    	end !* group *
 
 ! -------------------------------------------------------------------------------------------------
 ! LOCAL QUEUEs
@@ -190,8 +190,10 @@ ThisWindow           CLASS(WindowManager)
 Init                    PROCEDURE(),BYTE,PROC,DERIVED
 Kill                    PROCEDURE(),BYTE,PROC,DERIVED
 Ask                     PROCEDURE(),DERIVED
-ChangeAction            PROCEDURE(),BYTE,DERIVED
+ChangeAction        	PROCEDURE(),BYTE,DERIVED
+omit( '***', _C63_ )
 OnCloseEventCancelled   PROCEDURE(),DERIVED
+***
 Reset                   PROCEDURE(BYTE Force=0),DERIVED
 Run                     PROCEDURE(),BYTE,PROC,DERIVED
 SetAlerts               PROCEDURE(),DERIVED
@@ -329,6 +331,8 @@ Done                        procedure()
 TSaveAsClass            class,type
 CFG_GROUP                   cstring('ALL'),private
 CFG_VALUE                   cstring('PreViewer.ExportPath'),private
+CFG_INI_FILE                cstring('GS_VIEW.INI'),private
+
 is_enable                   long,private
 export_path                 cstring(1000),private
 
@@ -377,7 +381,7 @@ Done                procedure()
                 end !* class *
                         
 ! -------------------------------------------------------------------------------------------------
-! Classes Instances
+! Instances
 ! -------------------------------------------------------------------------------------------------
 Toolbar             ToolbarClass
 TZoom               TZoomClass
@@ -390,16 +394,13 @@ TPageList           TPageListClass
 TSaveAs             TSaveAsClass
 TPVQueue            TPVQueueClass
 TWait               TWaitClass
-
+! -------------------------------------------------------------------------------------------------
     code
     clear( WD )         ! Clear Windows Data
 
-    ToPrint.Init()      ! Need to be first because need takes the current "Report"
-    
-    TPVQueue.Init()     ! Read the current Previewer Queue
-    
-    TSaveAs.Init()      ! Init the Save As, PDF, TEXT, HTML, PNG, XML
-       
+    ToPrint.Init()      ! Need to be first because need takes the current "Report"    
+    TPVQueue.Init()     ! Read the current Previewer Queue    
+    TSaveAs.Init()      ! Init the Save As, PDF, TEXT, HTML, PNG, XML      
     TPrinter.Init()     ! Init Printer List & Default Printer
     
     GlobalResponse = ThisWindow.Run()
@@ -410,7 +411,8 @@ TWait               TWaitClass
     TPVQueue.Done()    
     ToPrint.Done()
     
-    RETURN(GSV:Response)
+	return(GSV:Response)
+		
 ! -------------------------------------------------------------------------------------------------
 
 ! -------------------------------------------------------------------------------------------------
@@ -429,13 +431,15 @@ ReturnValue     byte,auto
     ReturnValue = parent.ChangeAction()
     return ReturnValue
 
+omit( '***', _C63_ )
 ! -------------------------------------------------------------------------------------------------
 ! ThisWindow.OnCloseEventCancelled()
 ! -------------------------------------------------------------------------------------------------
 ThisWindow.OnCloseEventCancelled    procedure()
-    CODE
+    code
     parent.OnCloseEventCancelled
-    
+*** 
+
 ! -------------------------------------------------------------------------------------------------
 ! ThisWindow.Reset( BYTE Force=0 )
 ! -------------------------------------------------------------------------------------------------
@@ -466,36 +470,37 @@ ThisWindow.SetAlerts    procedure()
 ! ThisWindow.TakeAccepted()
 ! -------------------------------------------------------------------------------------------------
 ThisWindow.TakeAccepted procedure()
-ReturnValue     BYTE,AUTO
-Looped          BYTE
+ReturnValue     byte,auto
+Looped          byte
     code
     loop
         if Looped
             return Level:Notify
         else
             Looped = 1
-        end !* if *
+		end !* if *
+		
         case Accepted()
-        OF ?PrintAllButton
-        OF ?PrintOneButton
-        OF ?CancelButton
-        OF ?JumpFirstButton
-        OF ?JumpPrevButton
-        OF ?JumpNextButton
-        OF ?JumpLastButton
-        OF ?WD:CurrentPage
-        OF ?WD:ShowPageList
-        OF ?ZoomInButton
-        OF ?ZoomOutButton
-        OF ?ZoomToPageWidth
-        OF ?ZoomToPageHeight
-        OF ?Zoom100Percent
-        OF ?WD:SearchString
-        OF ?SearchButton
-        OF ?TogglePrintButton
-        OF ?ListPages
-        OF ?BorderRegion
-        END
+			OF ?PrintAllButton
+			OF ?PrintOneButton
+			OF ?CancelButton
+			OF ?JumpFirstButton
+			OF ?JumpPrevButton
+			OF ?JumpNextButton
+			OF ?JumpLastButton
+			OF ?WD:CurrentPage
+			OF ?WD:ShowPageList
+			OF ?ZoomInButton
+			OF ?ZoomOutButton
+			OF ?ZoomToPageWidth
+			OF ?ZoomToPageHeight
+			OF ?Zoom100Percent
+			OF ?WD:SearchString
+			OF ?SearchButton
+			OF ?TogglePrintButton
+			OF ?ListPages
+			OF ?BorderRegion
+        end
         ReturnValue = parent.TakeAccepted()
         
         case Accepted()
@@ -616,23 +621,23 @@ Looped          BYTE
     
     ReturnValue = Level:Fatal
     
-    RETURN ReturnValue
+    return ReturnValue
     
 ! -------------------------------------------------------------------------------------------------
 ! ThisWindow.TakeCloseEvent()
 ! -------------------------------------------------------------------------------------------------
-ThisWindow.TakeCloseEvent PROCEDURE
-ReturnValue          BYTE,AUTO
-    CODE
-    ReturnValue = PARENT.TakeCloseEvent()
-    RETURN ReturnValue
+ThisWindow.TakeCloseEvent		procedure()
+ReturnValue	byte,auto
+    code
+    ReturnValue = parent.TakeCloseEvent()
+    return ReturnValue
 
 ! -------------------------------------------------------------------------------------------------
 ! ThisWindow.TakeDisableButton( SIGNED Control, BYTE MakeDisable )
 ! -------------------------------------------------------------------------------------------------
-ThisWindow.TakeDisableButton    procedure( SIGNED Control,BYTE MakeDisable )
-    CODE
-    PARENT.TakeDisableButton(Control,MakeDisable)
+ThisWindow.TakeDisableButton 	procedure( SIGNED Control,BYTE MakeDisable )
+    code
+    parent.TakeDisableButton(Control,MakeDisable)
 
 ! -------------------------------------------------------------------------------------------------
 ! ThisWindow.TakeEvent()
@@ -885,19 +890,20 @@ Looped              BYTE
 ThisWindow.TakeNewSelection     procedure()
 ReturnValue         BYTE,AUTO
 Looped              BYTE
-    CODE
-    LOOP                                                     ! This method receives all NewSelection events
-        IF Looped
-            RETURN Level:Notify
-        ELSE
+    code
+    loop
+        if Looped
+            return Level:Notify
+        else
             Looped = 1
-        END
-        CASE FIELD()
-        OF ?WD:CurrentPage
-        OF ?ListPages
-        END
+		end !* end *
+		
+        case Field()
+        	of ?WD:CurrentPage
+        	of ?ListPages
+        end !* case *
         
-        ReturnValue = PARENT.TakeNewSelection()
+        ReturnValue = parent.TakeNewSelection()
         
         CASE FIELD()
             OF ?WD:CurrentPage
@@ -921,11 +927,11 @@ Looped              BYTE
 ThisWindow.Init     procedure()
 ReturnValue         BYTE,AUTO
     CODE
-    GlobalErrors.SetProcedureName('GSPreviewer')
+    GlobalErrors.SetProcedureName('GSPreViewer')
   
-    IF not records(pImageQueue)
+    if not records(pImageQueue)
         Return(LEVEL:Fatal)
-    END !* END *
+    end !* END *
   
     SELF.Request = GlobalRequest
     CLEAR(GlobalRequest)
@@ -964,8 +970,10 @@ ReturnValue         BYTE,AUTO
 
     GSV:BorderFEQ                   = ?BorderBox
     GSV:ImageFEQ                    = ?PageImage
-    GSV:RegionFEQ                   = ?BorderRegion
+	GSV:RegionFEQ                   = ?BorderRegion
+	! Warning : --	
     !GSV:BorderFEQ {PROP:Color}    = COLOR:Gray
+	! Warning : --
     GSV:BorderFEQ {PROP:Fill}       = COLOR:White
     GSV:ImageFEQ  {PROP:Color}      = COLOR:White
     GSV:ImageFEQ  {PROP:Text}       = PageQueue.WmfFile
@@ -979,10 +987,21 @@ ReturnValue         BYTE,AUTO
     GetClientArea()
     PreviewWindow{ Prop:Pixels }    = false                
 
-    TPageList.Init( ?ListPages, ?ListboxPanel )
-    ?ListPages{ PROPLIST:DefHdrTextColor } = COLOR:Black
-    ?ListPages{ PROPLIST:DefHdrBackColor } = COLOR:Gray         ! C10 / C11
-    !?ListPages{ PROPLIST:DefHdrBackColor } = COLOR:LightGray    ! C12
+	TPageList.Init( ?ListPages, ?ListboxPanel )
+	compile( '***', _C10_ )
+	?ListPages{ PROPLIST:DefHdrTextColor } = COLOR:Black
+	?ListPages{ PROPLIST:DefHdrBackColor } = COLOR:Gray
+	***
+	
+	compile( '***', _C11_ )
+	?ListPages{ PROPLIST:DefHdrTextColor } = COLOR:Black
+	?ListPages{ PROPLIST:DefHdrBackColor } = COLOR:Gray
+	***
+
+	compile( '***', _C12_ )
+	?ListPages{ PROPLIST:DefHdrTextColor } = COLOR:Black
+    ?ListPages{ PROPLIST:DefHdrBackColor } = COLOR:LightGray
+	***		
 
     GSV:RegionFEQ {Prop:Alrt,255} = MouseLeft
     GSV:RegionFEQ {Prop:Alrt,255} = MouseRight
@@ -1197,25 +1216,25 @@ TPreViewerClass.ScrollDownPage     procedure()
 ! -------------------------------------------------------------------------------------------------
 TPreViewerClass.ScrollUpabit       procedure()
 NewVSP      LONG
-    CODE
+    code
     NewVSP = self.WindowCtrl{Prop:VScrollPos} - 50  !!50
-    If self.CurrentPage > 1
+    if self.CurrentPage > 1
         !If GSV:ClientAreaWidth < (GSV:ImageHeight * (Tzoom.GetValue()/100))
-        If GSV:ClientAreaHeight < (TImage.GetHeight() * (Tzoom.GetValue()/100))
-            If NewVSP > 0
+        if GSV:ClientAreaHeight < (TImage.GetHeight() * (Tzoom.GetValue()/100))
+            if NewVSP > 0
                 self.WindowCtrl{Prop:VScrollPos} = NewVSP
-            Else
+            else
                 self.DecPage()
                 self.DrawPage()
                 self.WindowCtrl{Prop:VScrollPos} = 255
-            End
-        Else
+            end
+        else
             self.DecPage()
             self.DrawPage()
-        End
-    Else
+        end
+    else
         self.WindowCtrl{Prop:VScrollPos} = 0
-    End
+    end !* end *
 
 ! -------------------------------------------------------------------------------------------------
 ! TPreViewerClass.ScrollDownabit()
@@ -1233,14 +1252,14 @@ NewVSP      LONG
                 self.IncPage()
                 self.DrawPage()
                 self.WindowCtrl{Prop:VScrollPos} = 0
-            end
+            end !* end *
         else
             self.IncPage()
             self.DrawPage()
-        end
+        end !* end *
     else
         self.WindowCtrl{Prop:VScrollPos} = 255
-    end
+    end !* end *
 
 ! -------------------------------------------------------------------------------------------------
 ! TPreViewerClass.DrawPage()
@@ -1301,30 +1320,29 @@ CurrHeight          long
     Display()
     
     self.WindowCtrl{Prop:Pixels} = False
-    IF WD.ShowPageList
+    if WD.ShowPageList
         TPageList.GetArea()
         TPageList.Draw()
-    END !* end *
+    end !* end *
 
 ! -------------------------------------------------------------------------------------------------
 ! TPreViewerClass.GetTotalPages()
 ! -------------------------------------------------------------------------------------------------
-TPreViewerClass.GetTotalPages       procedure()
+TPreViewerClass.GetTotalPages       		procedure()
     code
-    return self.TotalPages
-    
+    return self.TotalPages    
 
 ! -------------------------------------------------------------------------------------------------
 ! TPreViewerClass.GetCurrentPageFromQueue()
 ! -------------------------------------------------------------------------------------------------
-TPreViewerClass.GetCurrentPageFromQueue    procedure()
+TPreViewerClass.GetCurrentPageFromQueue    	procedure()
     code
     get( PageQueue, self.CurrentPage )
     
 ! -------------------------------------------------------------------------------------------------  
 ! TPreViewerClass.GetCurrentImage(),*cstring
 ! -------------------------------------------------------------------------------------------------
-TPreViewerClass.GetCurrentImage         procedure()
+TPreViewerClass.GetCurrentImage         	procedure()
     code
     self.GetCurrentPageFromQueue()
     return PageQueue.WmfFile
@@ -1376,7 +1394,7 @@ is_add                  long
     
         Tpercent.Init( ?WD:Percent, self.TotalPages )
         loop while Tpercent.Next( i )
-            GET( PageQueue, i )
+            get( PageQueue, i )
             
             if is_add and PageQueue.Found = TRUE
                 cycle
@@ -1687,7 +1705,7 @@ TImageClass.GetAspect               procedure()!,real
 TImageClass.Init    procedure( *cstring _fname )
 TempImage           long
     code
-    PreviewWindow{ Prop:Pixels }= True
+    PreviewWindow{ Prop:Pixels } = True
     
     TempImage               =   Create( 0, CREATE:Image )
     TempImage{ PROP:Text }  =   _fname
@@ -1798,7 +1816,7 @@ TPButtonClass.Done      procedure()
 ! -------------------------------------------------------------------------------------------------
 TPageListClass.GetPage      procedure()
     code
-    GET( PageQueue, Choice(self.listCtrl) )
+    get( PageQueue, Choice(self.listCtrl) )
     
 ! -------------------------------------------------------------------------------------------------
 ! TPageListClass.GetArea()
@@ -1936,7 +1954,7 @@ TSaveAsClass.SetButtons     procedure()
 ! -------------------------------------------------------------------------------------------------
 TSaveAsClass.LoadPath   procedure()
     code   
-    !self.export_path = acc_getvar( self.CFG_GROUP, self.CFG_VALUE, '' )    
+	self.export_path = GetIni( self.CFG_GROUP, self.CFG_VALUE, '.', self.CFG_INI_FILE )
     SetPath( self.export_path )      
     
 ! -------------------------------------------------------------------------------------------------
@@ -1949,12 +1967,23 @@ strPath         cstring(255)
 strFname        cstring(255)
 strExt          cstring(255)
 strTargetPath   cstring(1000)
-    code   
-	strFullFN = clip(self.ReportTarget.GetNewName())	
+	code   		
+	strFullFN = clip( self.ReportTarget.GetFileName() )
+
+	! ---------------------------------------------------------------------------------------------
+	! Hemos generado este método que reemplaza el GetFileName() => GetNewName().
+	!
+	! GetFileName() no cambia al seleccionar un nuevo destino por lo tanto no 
+	! podemos guardar el path que seleccionar el usuario y se debe seleccionarlo cada vez.
+	! Esto requiere cambios en la interfaz de los ReportTargets y está fuera del alcance de
+	! esta biblioteca.
+	! ---------------------------------------------------------------------------------------------
+	!strFullFN = clip(self.ReportTarget.GetNewName())	
+	! ---------------------------------------------------------------------------------------------
     
     if PathSplit( strFullFN, strDrive, strPath, strFname, strExt )   
         strTargetPath = strDrive & strPath        
-        !acc_setvar( self.CFG_GROUP, self.CFG_VALUE, strTargetPath )
+        PutIni( self.CFG_GROUP, self.CFG_VALUE, strTargetPath, self.CFG_INI_FILE )
     end !* if *
        
 ! -------------------------------------------------------------------------------------------------
@@ -1972,19 +2001,14 @@ is_ok           long
     code
     is_ok = false
     
-    !self.export_path = acc_getvar( 'ALL', 'PreViewer.ExportPath', '' )    
+    self.export_path = GetIni( self.CFG_GROUP, self.CFG_VALUE, '.', self.CFG_INI_FILE )
     SetPath( self.export_path )
-    
-    !message( self.export_path )
-    !message( 'REPORT - GetFileName() --> ' & self.ReportTarget.GetFileName() )
-    
+       
     if FileDialogA( 'Seleccione el archivo a guardar', FileName, '*.pdf|All|*.*', FILE:KeepDir + FILE:Save + FILE:NoError + FILE:LongName )
     
         strFullFN = SELF.ReportTarget.GetFileName()
         if PathSplit( strFullFN, strDrive, strPath, strFname, strExt )
         end 
-        !message( strFullFN & '-->' & strDrive & '-' & strPath  & '-' & strFname & '-' &  strExt )    
-        !message( self.export_path & ' --> ' & FileName )
         is_ok = true
     end !* if *
     
@@ -2058,8 +2082,11 @@ TSaveAsClass.Done       procedure()
 TPVQueueClass.LoadPagesQueue  procedure()
 recs        long
 i           long
-    code   
-    !TWait.Init('LOAD')    
+	code   
+	! -------------------------------------------------------------------------------------		
+	! Tardaba más en mostrar y actualizar el cartel a hacer la experiencia más interactiva.
+    ! TWait.Init('LOAD')
+	! ------------------------------------------------------------------------------------- 
     
     FREE( PageQueue )
     

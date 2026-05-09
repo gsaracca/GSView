@@ -11,5 +11,5 @@
 #pragma define(_ABCDllMode_=>0)
 #pragma define(_ABCLinkMode_=>1)
 #compile "gsview.clw"
-#compile "gsview001.clw"
+#compile "gs_pv.clw"
 #link "gsview.dll"

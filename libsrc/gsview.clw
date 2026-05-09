@@ -10,8 +10,8 @@
 
 !--- Application Global and Exported Procedure Definitions --------------------------------------------
     map
-        module('GSVIEW001.CLW')
-            ITPreViewer(*Queue pImageQueue,Short pZoom,Byte pMaximize,String pWindowCaption,Byte pStartPageList, <*ReportTargetSelectorClass pTargetSelector>),byte,dll
+        module('GS_PV.CLW')
+            GSPreViewer(*Queue pImageQueue,Short pZoom,Byte pMaximize,String pWindowCaption,Byte pStartPageList, <*ReportTargetSelectorClass pTargetSelector>),byte,dll
         end !* module 
         module('WinAPI')
             API_DeleteFile(*cstring dfilename),bool,Raw,Pascal,Proc,Name('deletefileA')

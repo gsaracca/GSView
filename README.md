@@ -18,7 +18,7 @@
 
 ## ¿Qué hace?
 
-`gsview.dll` es una DLL reutilizable para Clarion que provee una ventana de previsualización de informes multipágina basada en archivos WMF (Windows Metafile). Expone una única función de alto nivel (`ITPreViewer`) que recibe una cola de archivos de imagen —uno por página del informe— y presenta al usuario una interfaz completa con:
+`gsview.dll` es una DLL reutilizable para Clarion que provee una ventana de previsualización de informes multipágina basada en archivos WMF (Windows Metafile). Expone una única función de alto nivel (`GSPreViewer`) que recibe una cola de archivos de imagen —uno por página del informe— y presenta al usuario una interfaz completa con:
 
 - El procedimiento puede ser usado con el template de IceTips o con código fuente realizado a mano, sin restricciones.
 - Navegación entre páginas (primero / anterior / siguiente / último, PgUp/PgDn)
@@ -41,8 +41,8 @@ GSView/
 ├── gsview.sln           — Solución Clarion
 ├── libsrc/
 │   ├── gsview.clw       — Módulo principal: inicialización de la DLL, globals
-│   ├── gsview001.clw    — Procedimiento ITPreViewer + todas las clases internas
-│   ├── GSVIEW001.INC    — Prototipo de exportación de la DLL
+│   ├── gs_pv.clw        — Procedimiento GSPreViewer + todas las clases internas
+│   ├── gs_pv.inc        — Prototipo de exportación de la DLL
 │   ├── TPRE_TYPES.CLW   — Definición de TQ_Pages (cola de páginas)
 │   ├── TPRN_TYPES.CLW   — Definición de TQ_PRINTERS y equates de impresoras
 │   ├── ZoomModule.clw   — Clase TZoomClass
@@ -101,7 +101,7 @@ Esto indica al compilador dónde encontrar los módulos fuente sin necesidad de 
 | Archivo de proyecto | `gsview.prj` | `gsview.cwproj` | `gsview.cwproj` |
 | `COLOR:LightGray` en `PROPLIST:DefHdrBackColor` | N/A | No disponible — se usa `COLOR:Gray` | `COLOR:LightGray` |
 
-El fuente actual usa `COLOR:Gray` para mantener compatibilidad con C10 y C11. Si se compila exclusivamente para C12, se puede cambiar por `COLOR:LightGray` en [libsrc/gsview001.clw](libsrc/gsview001.clw) (línea comentada en el fuente).
+El fuente actual usa `COLOR:Gray` para mantener compatibilidad con C10 y C11. Si se compila exclusivamente para C12, se puede cambiar por `COLOR:LightGray` en [libsrc/gs_pv.clw](libsrc/gs_pv.clw) (línea comentada en el fuente).
 
 ---
 
@@ -116,14 +116,14 @@ MAP
   MODULE('gsview.dll')
     gsview:Init  PROCEDURE(<ErrorClass curGlobalErrors>, <INIClass curINIMgr>), DLL
     gsview:Kill  PROCEDURE, DLL
-    ITPreViewer  FUNCTION(*Queue pImageQueue, Short pZoom, Byte pMaximize, |
+    GSPreViewer  FUNCTION(*Queue pImageQueue, Short pZoom, Byte pMaximize, |
                           String pWindowCaption, Byte pStartPageList, |
                           <*ReportTargetSelectorClass pTargetSelector>), BYTE, DLL
   END
 END
 ```
 
-> El archivo `libsrc/GSVIEW001.INC` exporta el prototipo de `gsview:Init` y `gsview:Kill`, pero no el de `ITPreViewer` (por su firma con parámetros opcionales de clase). Declarar `ITPreViewer` manualmente en el MAP del programa llamador como se muestra arriba.
+> El archivo `libsrc/gs_pv.inc` exporta el prototipo de `GSPreViewer`, pero no incluye `gsview:Init` ni `gsview:Kill` (que están en `gsview.clw`). Declarar los tres prototipos manualmente en el MAP del programa llamador como se muestra arriba.
 
 ### 2. Inicializar y terminar la DLL
 
@@ -166,7 +166,7 @@ MyImageQueue = 'C:\Temp\Pagina002.wmf'
 ADD(MyImageQueue)
 
 ! Llamar al previewer
-Result = ITPreViewer( |
+Result = GSPreViewer( |
     MyImageQueue,          |  ! Cola de páginas (WMF)
     100,                   |  ! Zoom inicial (100 = 100%)
     TRUE,                  |  ! Maximizar ventana al abrir
@@ -176,11 +176,11 @@ Result = ITPreViewer( |
 )
 ```
 
-`ITPreViewer` devuelve `TRUE` si el usuario eligió imprimir, `FALSE` si canceló.
+`GSPreViewer` devuelve `TRUE` si el usuario eligió imprimir, `FALSE` si canceló.
 
 ---
 
-## Parámetros de ITPreViewer
+## Parámetros de GSPreViewer
 
 | Parámetro | Tipo | Descripción |
 |---|---|---|
