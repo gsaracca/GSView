@@ -267,8 +267,9 @@ La impresión se realiza abriendo un `REPORT` en tiempo de ejecución con las di
 ---
 
 ## Notas para el desarrollador
-
-- La DLL usa `INIClass` con el archivo `cfg.ini` en modo `NVD_INI` (Windows INI). Si la aplicación llamadora ya tiene un `INIMgr` global, pásalo en `gsview:Init` para compartir la misma instancia.
+- Esta DLL es un reemplazo del PreView que evita su generación junto con el esquema de tablas del diccionario y permite mayor 
+flexibilidad.
+- No es un Template, es solo una llamada al DLL que permite generar reemplazar tanto el PreView std de Clarion como el de IceTips.
 - La variable global `SilentRunning` (`BYTE`) permite suprimir diálogos cuando la aplicación corre en modo batch; establécela en `TRUE` desde fuera de la DLL si es necesario.
 - El evento personalizado `GS_EVENT:Sized` (`EQUATE(501h)`) se usa internamente para recalcular el layout al redimensionar la ventana; no interferirá con eventos de la aplicación llamadora salvo que esta también use el valor `0x501`.
 - La búsqueda requiere un mínimo de 2 caracteres para ejecutarse.
