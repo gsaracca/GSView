@@ -3,8 +3,8 @@
 **Autor:** Gustavo Saracca  
 **Contacto:** gustavo@gmail.com
 
-**Año:** 2024  
-**Plataforma:** Clarion 10 / 11 / 12, Windows
+**Año:** 2024 - 2026
+**Plataforma:** Clarion 6.3 / 10 / 11 / 12, Windows
 
 ---
 
