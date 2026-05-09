@@ -981,7 +981,8 @@ ReturnValue         BYTE,AUTO
 
     TPageList.Init( ?ListPages, ?ListboxPanel )
     ?ListPages{ PROPLIST:DefHdrTextColor } = COLOR:Black
-    ?ListPages{ PROPLIST:DefHdrBackColor } = COLOR:LightGray
+    ?ListPages{ PROPLIST:DefHdrBackColor } = COLOR:Gray         ! C10 / C11
+    !?ListPages{ PROPLIST:DefHdrBackColor } = COLOR:LightGray    ! C12
 
     GSV:RegionFEQ {Prop:Alrt,255} = MouseLeft
     GSV:RegionFEQ {Prop:Alrt,255} = MouseRight
@@ -1949,7 +1950,7 @@ strFname        cstring(255)
 strExt          cstring(255)
 strTargetPath   cstring(1000)
     code   
-    strFullFN = clip(self.ReportTarget.GetNewName())
+	strFullFN = clip(self.ReportTarget.GetNewName())	
     
     if PathSplit( strFullFN, strDrive, strPath, strFname, strExt )   
         strTargetPath = strDrive & strPath        
