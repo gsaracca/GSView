@@ -262,7 +262,6 @@ La impresión se realiza abriendo un `REPORT` en tiempo de ejecución con las di
 |---|---|
 | `gsview.dll` | Esta DLL |
 | `clarunext.dll` | Runtime extendido de Clarion (debe estar en el path) |
-| `cfg.ini` | Archivo de configuración INI (se crea automáticamente en el directorio de trabajo) |
 
 ---
 
