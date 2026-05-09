@@ -39,6 +39,7 @@ GSView/
 ├── Clarion100.red       — Archivo de redirección para Clarion 10
 ├── Clarion110.red       — Archivo de redirección para Clarion 11
 ├── Clarion120.red       — Archivo de redirección para Clarion 12
+├── gsview.prj           — Proyecto para Clarion 6.3
 ├── gsview.cwproj        — Proyecto Clarion (compilación directa, sin App)
 ├── gsview.sln           — Solución Clarion
 ├── libsrc/
@@ -66,11 +67,23 @@ GSView/
 
 El proyecto se compila directamente desde el IDE de Clarion sin necesitar un archivo `.app`. El `gsview.cwproj` referencia todos los módulos fuente ubicados en `libsrc/` y el sistema de redirección se encarga de localizar los archivos `.clw`, `.inc` e `.ico` automáticamente.
 
-Pasos para compilar:
+**Clarion 10 / 11 / 12:**
 
 1. Abrir `gsview.sln` en el IDE de Clarion.
 2. Seleccionar la configuración **Release** o **Debug**.
-3. Compilar — el IDE usa el archivo `.red` correspondiente a la versión de Clarion instalada.
+3. Compilar — el IDE usa el archivo `.red` correspondiente a la versión instalada.
+
+**Clarion 6.3:**
+
+1. Abrir `gsview.prj` con el IDE de Clarion 6.3.
+2. Compilar normalmente — el sistema de redirección localiza los fuentes en `libsrc/`.
+
+### Archivos de proyecto por versión
+
+| Archivo | Versión |
+|---|---|
+| `gsview.prj` | Clarion 6.3 |
+| `gsview.cwproj` / `gsview.sln` | Clarion 10 / 11 / 12 |
 
 ### Archivos de redirección por versión
 
@@ -94,11 +107,12 @@ Esto indica al compilador dónde encontrar los módulos fuente sin necesidad de 
 
 ### Compatibilidad entre versiones
 
-| Aspecto | Clarion 10 / 11 | Clarion 12 |
-|---|---|---|
-| `COLOR:LightGray` en `PROPLIST:DefHdrBackColor` | No disponible — se usa `COLOR:Gray` | `COLOR:LightGray` |
+| Aspecto | Clarion 6.3 | Clarion 10 / 11 | Clarion 12 |
+|---|---|---|---|
+| Archivo de proyecto | `gsview.prj` | `gsview.cwproj` | `gsview.cwproj` |
+| `COLOR:LightGray` en `PROPLIST:DefHdrBackColor` | N/A | No disponible — se usa `COLOR:Gray` | `COLOR:LightGray` |
 
-El fuente actual usa `COLOR:Gray` para mantener compatibilidad con C10 y C11. Si se compila exclusivamente para C12, se puede cambiar por `COLOR:LightGray` en `gsview001.clw` (línea comentada en el fuente).
+El fuente actual usa `COLOR:Gray` para mantener compatibilidad con C10 y C11. Si se compila exclusivamente para C12, se puede cambiar por `COLOR:LightGray` en [libsrc/gsview001.clw](libsrc/gsview001.clw) (línea comentada en el fuente).
 
 ---
 
