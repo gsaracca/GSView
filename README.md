@@ -267,9 +267,9 @@ La impresión se realiza abriendo un `REPORT` en tiempo de ejecución con las di
 ---
 
 ## Notas para el desarrollador
-- Esta DLL es un reemplazo del PreView que evita su generación junto con el esquema de tablas del diccionario y permite mayor 
-flexibilidad.
-- No es un Template, es solo una llamada al DLL que permite generar reemplazar tanto el PreView std de Clarion como el de IceTips.
+- Esta DLL es un reemplazo del PreView que evita su generación junto con el esquema de tablas del diccionario y permite mayor flexibilidad.
+- No es un Template, es solo una llamada al DLL que permite reemplazar tanto el PreView std de Clarion como el de IceTips.
+- La constante `GSView:Version` (`EQUATE`) expone la versión de la DLL en formato `AA.MM.DDX` (año-mes-día + letra de revisión). Se define en `gsview.clw` y puede leerse desde la aplicación llamadora vía la misma declaración MAP.
 - La variable global `SilentRunning` (`BYTE`) permite suprimir diálogos cuando la aplicación corre en modo batch; establécela en `TRUE` desde fuera de la DLL si es necesario.
 - El evento personalizado `GS_EVENT:Sized` (`EQUATE(501h)`) se usa internamente para recalcular el layout al redimensionar la ventana; no interferirá con eventos de la aplicación llamadora salvo que esta también use el valor `0x501`.
 - La búsqueda requiere un mínimo de 2 caracteres para ejecutarse.
