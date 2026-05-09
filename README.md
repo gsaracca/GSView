@@ -4,7 +4,7 @@
 **Contacto:** gustavo@gmail.com
 
 **Año:** 2024  
-**Plataforma:** Clarion (CW12+), Windows
+**Plataforma:** Clarion 10 / 11 / 12, Windows
 
 ---
 
@@ -36,11 +36,15 @@
 
 ```
 GSView/
-├── gsview.app           — Aplicación Clarion (fuente del generador)
-├── gsview.clw           — Módulo principal: inicialización de la DLL, globals
-├── gsview001.clw        — Procedimiento ITPreViewer + todas las clases internas
-├── GSVIEW_BC.CLW        — Módulo de diccionario (DctInit / DctKill)
+├── Clarion100.red       — Archivo de redirección para Clarion 10
+├── Clarion110.red       — Archivo de redirección para Clarion 11
+├── Clarion120.red       — Archivo de redirección para Clarion 12
+├── gsview.cwproj        — Proyecto Clarion (compilación directa, sin App)
+├── gsview.sln           — Solución Clarion
 ├── libsrc/
+│   ├── gsview.clw       — Módulo principal: inicialización de la DLL, globals
+│   ├── gsview001.clw    — Procedimiento ITPreViewer + todas las clases internas
+│   ├── GSVIEW001.INC    — Prototipo de exportación de la DLL
 │   ├── TPRE_TYPES.CLW   — Definición de TQ_Pages (cola de páginas)
 │   ├── TPRN_TYPES.CLW   — Definición de TQ_PRINTERS y equates de impresoras
 │   ├── ZoomModule.clw   — Clase TZoomClass
@@ -53,6 +57,48 @@ GSView/
 │   └── PercentModule.inc
 └── images/              — Íconos de la barra de herramientas (.ico)
 ```
+
+---
+
+## Compilación
+
+### Sin necesidad de App
+
+El proyecto se compila directamente desde el IDE de Clarion sin necesitar un archivo `.app`. El `gsview.cwproj` referencia todos los módulos fuente ubicados en `libsrc/` y el sistema de redirección se encarga de localizar los archivos `.clw`, `.inc` e `.ico` automáticamente.
+
+Pasos para compilar:
+
+1. Abrir `gsview.sln` en el IDE de Clarion.
+2. Seleccionar la configuración **Release** o **Debug**.
+3. Compilar — el IDE usa el archivo `.red` correspondiente a la versión de Clarion instalada.
+
+### Archivos de redirección por versión
+
+Cada versión de Clarion utiliza su propio archivo de redirección ubicado en la raíz del proyecto:
+
+| Archivo | Versión |
+|---|---|
+| `Clarion100.red` | Clarion 10 |
+| `Clarion110.red` | Clarion 11 |
+| `Clarion120.red` | Clarion 12 |
+
+Los tres archivos definen las mismas rutas de redirección:
+
+```
+*.inc = libsrc
+*.clw = libsrc
+*.ico = images
+```
+
+Esto indica al compilador dónde encontrar los módulos fuente sin necesidad de copiar archivos ni mantener rutas absolutas.
+
+### Compatibilidad entre versiones
+
+| Aspecto | Clarion 10 / 11 | Clarion 12 |
+|---|---|---|
+| `COLOR:LightGray` en `PROPLIST:DefHdrBackColor` | No disponible — se usa `COLOR:Gray` | `COLOR:LightGray` |
+
+El fuente actual usa `COLOR:Gray` para mantener compatibilidad con C10 y C11. Si se compila exclusivamente para C12, se puede cambiar por `COLOR:LightGray` en `gsview001.clw` (línea comentada en el fuente).
 
 ---
 
@@ -74,7 +120,7 @@ MAP
 END
 ```
 
-> El archivo `GSVIEW001.INC` generado por el compilador no exporta el prototipo completo de `ITPreViewer`; es necesario declararlo manualmente como se muestra arriba.
+> El archivo `libsrc/GSVIEW001.INC` exporta el prototipo de `gsview:Init` y `gsview:Kill`, pero no el de `ITPreViewer` (por su firma con parámetros opcionales de clase). Declarar `ITPreViewer` manualmente en el MAP del programa llamador como se muestra arriba.
 
 ### 2. Inicializar y terminar la DLL
 
