@@ -1,7 +1,7 @@
-    MEMBER
+    member
 
-    MAP
-    END 
+    map
+    end 
 
 include( 'ZoomModule.inc' ),once
 

@@ -41,14 +41,7 @@
     <Compile Include="gsview001.clw">
       <Generated>true</Generated>
     </Compile>
-    <Compile Include="GSVIEW_BC.CLW">
-      <Generated>true</Generated>
-    </Compile>
-    <Compile Include="gsview_BC0.CLW">
-      <Generated>true</Generated>
-    </Compile>
     <Library Include="gsview.EXE.manifest" />
-    <Library Include="\source\osg\access\access.lib" />
   </ItemGroup>
   <Import Project="$(ClarionBinPath)\SoftVelocity.Build.Clarion.targets" />
 </Project>

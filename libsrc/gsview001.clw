@@ -1,42 +1,44 @@
+! -------------------------------------------------------------------------------------------------
+!
+! Gustavo Saracca (C) - 2026
+!
+! -------------------------------------------------------------------------------------------------
 
+    member('gsview.clw')
 
-   MEMBER('gsview.clw')                                    ! This is a MEMBER module
+    map
+        include('GSView001.inc'),once
+    end !* map *
+   include('KeyCodes.clw'),once
+   include('ABWINDOW.INC'),once
 
-                     MAP
-                       INCLUDE('GSVIEW001.INC'),ONCE        !Local module procedure declarations
-                     END
-
-
-!!! <summary>
-!!! Generated from procedure template - Source
-!!! </summary>
-ITPreViewer          PROCEDURE  (*Queue pImageQueue,Short pZoom,Byte pMaximize,String pWindowCaption,Byte pStartPageList,<*ReportTargetSelectorClass pTargetSelector>) ! Declare Procedure
+ITPreViewer procedure( *Queue pImageQueue, short pZoom, byte pMaximize, string pWindowCaption, byte pStartPageList, <*ReportTargetSelectorClass pTargetSelector> )
+! -------------------------------------------------------------------------------------------------
 ! MAP
-
-    MAP      
+! -------------------------------------------------------------------------------------------------
+    map
         GetFileSize( *cstring _file ),long
         GetReportImageSize( *cstring _fname, *long _width, *long _height )
         GetClientArea()
         DeleteFile( *cstring _fname )
-    END !* map *
-    
-!* END *
-! CONST 
-
+    end !* map *
+! -------------------------------------------------------------------------------------------------
+! CONST
+! -------------------------------------------------------------------------------------------------
 GS_EVENT:Sized      EQUATE(501h)
 
-!* END *
+! -------------------------------------------------------------------------------------------------
 ! PROJECT - LINK - RESOURCE FILES 
-
+! -------------------------------------------------------------------------------------------------
 ICON_CHECK_ON           equate('~check_on.ico')
 ICON_CHECK_OFF          equate('~check_off.ico')
     
     PRAGMA('link(check_on.ico)')
     PRAGMA('link(check_off.ico)')
-    
-!* END *
-! DATA to Window
 
+! -------------------------------------------------------------------------------------------------   
+! DATA for Window
+! -------------------------------------------------------------------------------------------------
 WD                  GROUP,PRE(WD)
 CurrentPage             long
 Percent                 long
@@ -44,16 +46,16 @@ SearchString            cstring(255)
 ShowPageList            byte
                     END !* group *
 
-!* END *
+! -------------------------------------------------------------------------------------------------
 ! LOCAL QUEUEs
-
+! -------------------------------------------------------------------------------------------------
 PageQueue               TQ_Pages
 QZoom                   TQ_ZoomSteps
 QPrinters               TQ_PRINTERS
 
-!* END *
+! -------------------------------------------------------------------------------------------------
 ! DATA
-
+! -------------------------------------------------------------------------------------------------
 GSV:Response            BYTE
 
 GSV:ClientAreaWidth     LONG
@@ -63,9 +65,9 @@ GSV:BorderFEQ           LONG
 GSV:ImageFEQ            LONG
 GSV:RegionFEQ           LONG
              
-!* END *
+! -------------------------------------------------------------------------------------------------
 ! WINDOW - PREVIEWER
-
+! -------------------------------------------------------------------------------------------------
 PreviewWindow WINDOW('GSoft - Previewer'),AT(,,751,235),CENTER,GRAY,IMM,MAX, |
             ICON(ICON:Print1),STATUS(-1,90,90),FONT('Arial',10),ALRT(PgDnKey), |
              ALRT(PgUpKey),COLOR(COLOR:BTNFACE),Tiled,HVSCROLL,RESIZE
@@ -180,8 +182,10 @@ PreviewWindow WINDOW('GSoft - Previewer'),AT(,,751,235),CENTER,GRAY,IMM,MAX, |
     END
 
 !* END *
-! ThisWindow : CLASS()
 
+! -------------------------------------------------------------------------------------------------
+! ThisWindow : CLASS()
+! -------------------------------------------------------------------------------------------------
 ThisWindow           CLASS(WindowManager)
 Init                    PROCEDURE(),BYTE,PROC,DERIVED
 Kill                    PROCEDURE(),BYTE,PROC,DERIVED
@@ -201,9 +205,9 @@ TakeNewSelection        PROCEDURE(),BYTE,PROC,DERIVED
 TakeEvent               PROCEDURE(),BYTE,PROC,DERIVED
                      END
 
-!* end *
+! -------------------------------------------------------------------------------------------------
 ! TPreViewerClass : class()
-
+! -------------------------------------------------------------------------------------------------
 TPreViewerClass         class(),type
 CurrentPage                 long,private
 WindowCtrl                  &window,private
@@ -249,9 +253,9 @@ Run                         procedure(),long
 Done                        procedure()
                         end !* class *
 
-!* END *
+! -------------------------------------------------------------------------------------------------
 ! TToPrintClass : class()
-
+! -------------------------------------------------------------------------------------------------
 TToPrintClass           class(),type
 ReportJobName               cstring(255),private
 Landscape                   byte,private
@@ -267,9 +271,9 @@ Run                         procedure(),long
 Done                        procedure()
                         end !* class *
     
-!* end *
+! -------------------------------------------------------------------------------------------------
 ! TImageClass   :   class()
-
+! -------------------------------------------------------------------------------------------------
 TImageClass         class(),type
 ImageWidth              long,private
 ImageHeight             long,private
@@ -284,9 +288,9 @@ Run                     procedure(),long
 Done                    procedure()
                     end !* class *
                     
-!* END *
+! -------------------------------------------------------------------------------------------------
 ! TPButtonClass :   class()
-
+! -------------------------------------------------------------------------------------------------
 TPButtonClass       class(),type
 btnCtrl                 long,private
 Xrange                  long,dim(2),private
@@ -300,10 +304,9 @@ Init                    procedure( long _ctrl )
 Draw                    procedure()
 Done                    procedure()
                     end !* class *
-                    
-!* END *
+! -------------------------------------------------------------------------------------------------
 ! TPageListClass : class()
-
+! -------------------------------------------------------------------------------------------------
 TPageListClass          class(),type
 listCtrl                    long,private
 panelCtrl                   long,private
@@ -319,10 +322,10 @@ Init                        procedure( long _ctrl, long _panel )
 Draw                        procedure()
 Done                        procedure()
                         end !* class *
-                        
-!* END *
+
+! -------------------------------------------------------------------------------------------------
 ! TSaveAsClass : class
-                       
+! -------------------------------------------------------------------------------------------------                     
 TSaveAsClass            class,type
 CFG_GROUP                   cstring('ALL'),private
 CFG_VALUE                   cstring('PreViewer.ExportPath'),private
@@ -351,9 +354,9 @@ Run                         procedure( string _type ),long,proc
 Done                        procedure()
                         end !* class *
                         
-!* END *        
+! -------------------------------------------------------------------------------------------------
 ! TPVQueueClass : class
-
+! -------------------------------------------------------------------------------------------------
 TQ_NewName      queue,type
 OldName             cstring(1000)
 NewName             cstring(1000)
@@ -373,9 +376,9 @@ Init                procedure()
 Done                procedure()
                 end !* class *
                         
-!* END *
+! -------------------------------------------------------------------------------------------------
 ! Classes Instances
-
+! -------------------------------------------------------------------------------------------------
 Toolbar             ToolbarClass
 TZoom               TZoomClass
 Tpre                TPreViewerClass
@@ -388,11 +391,7 @@ TSaveAs             TSaveAsClass
 TPVQueue            TPVQueueClass
 TWait               TWaitClass
 
-!* END *
-
-  CODE
-! CODE : This.Run()
-
+    code
     clear( WD )         ! Clear Windows Data
 
     ToPrint.Init()      ! Need to be first because need takes the current "Report"
@@ -412,131 +411,94 @@ TWait               TWaitClass
     ToPrint.Done()
     
     RETURN(GSV:Response)
+! -------------------------------------------------------------------------------------------------
 
-!* END *
 ! -------------------------------------------------------------------------------------------------
 ! ThisWindow.Ask()
+! -------------------------------------------------------------------------------------------------
 ThisWindow.Ask      procedure()
     CODE
     PARENT.Ask
 
-!* END *
+! -------------------------------------------------------------------------------------------------
 ! ThisWindow.ChangeAction()
-
+! -------------------------------------------------------------------------------------------------
 ThisWindow.ChangeAction     procedure()
-ReturnValue         BYTE,AUTO
+ReturnValue     byte,auto
     CODE
-    ReturnValue = PARENT.ChangeAction()
-    RETURN ReturnValue
+    ReturnValue = parent.ChangeAction()
+    return ReturnValue
 
-!* END *
+! -------------------------------------------------------------------------------------------------
 ! ThisWindow.OnCloseEventCancelled()
-
+! -------------------------------------------------------------------------------------------------
 ThisWindow.OnCloseEventCancelled    procedure()
     CODE
-    PARENT.OnCloseEventCancelled
+    parent.OnCloseEventCancelled
     
-!* END *
+! -------------------------------------------------------------------------------------------------
 ! ThisWindow.Reset( BYTE Force=0 )
-
+! -------------------------------------------------------------------------------------------------
 ThisWindow.Reset    procedure(BYTE Force=0)
-    CODE
-    SELF.ForcedReset += Force
-    IF PreviewWindow{Prop:AcceptAll} THEN 
-        RETURN 
-    END !* if *
-    PARENT.Reset(Force)
+    code
+    self.ForcedReset += Force
+    if PreviewWindow{Prop:AcceptAll}
+        return
+    end !* if *
+    parent.Reset(Force)
 
-!* END *
+! -------------------------------------------------------------------------------------------------
 ! ThisWindow.Update()
-
-ThisWindow.Update   procedure()
-    CODE
+! -------------------------------------------------------------------------------------------------
+ThisWindow.Update       procedure()
+    code
     WD.CurrentPage = Tpre.GetCurrentPage()
-    PARENT.Update()
+    parent.Update()
 
-!* END *
+! -------------------------------------------------------------------------------------------------
 ! ThisWindow.SetAlerts()
+! -------------------------------------------------------------------------------------------------
+ThisWindow.SetAlerts    procedure()
+    code
+    parent.SetAlerts
 
-ThisWindow.SetAlerts PROCEDURE()
-    CODE
-    PARENT.SetAlerts
-
-!* END *
+! -------------------------------------------------------------------------------------------------
 ! ThisWindow.TakeAccepted()
-
-ThisWindow.TakeAccepted PROCEDURE()
+! -------------------------------------------------------------------------------------------------
+ThisWindow.TakeAccepted procedure()
 ReturnValue     BYTE,AUTO
 Looped          BYTE
-    CODE
-    LOOP                                                     ! This method receive all EVENT:Accepted's
-        IF Looped
-            RETURN Level:Notify
-        ELSE
+    code
+    loop
+        if Looped
+            return Level:Notify
+        else
             Looped = 1
-        END
-        CASE ACCEPTED()
+        end !* if *
+        case Accepted()
         OF ?PrintAllButton
-          ! Start of "Control Event Handling"
-          ! Generated Code
         OF ?PrintOneButton
-          ! Start of "Control Event Handling"
-          ! Generated Code
         OF ?CancelButton
-          ! Start of "Control Event Handling"
-          ! Generated Code
         OF ?JumpFirstButton
-          ! Start of "Control Event Handling"
-          ! Generated Code
         OF ?JumpPrevButton
-          ! Start of "Control Event Handling"
-          ! Generated Code
         OF ?JumpNextButton
-          ! Start of "Control Event Handling"
-          ! Generated Code
         OF ?JumpLastButton
-          ! Start of "Control Event Handling"
-          ! Generated Code
         OF ?WD:CurrentPage
-          ! Start of "Control Event Handling"
-          ! Generated Code
         OF ?WD:ShowPageList
-          ! Start of "Control Event Handling"
-          ! Generated Code
         OF ?ZoomInButton
-          ! Start of "Control Event Handling"
-          ! Generated Code
         OF ?ZoomOutButton
-          ! Start of "Control Event Handling"
-          ! Generated Code
         OF ?ZoomToPageWidth
-          ! Start of "Control Event Handling"
-          ! Generated Code
         OF ?ZoomToPageHeight
-          ! Start of "Control Event Handling"
-          ! Generated Code
         OF ?Zoom100Percent
-          ! Start of "Control Event Handling"
-          ! Generated Code
         OF ?WD:SearchString
-          ! Start of "Control Event Handling"
-          ! Generated Code
         OF ?SearchButton
-          ! Start of "Control Event Handling"
-          ! Generated Code
         OF ?TogglePrintButton
-          ! Start of "Control Event Handling"
-          ! Generated Code
         OF ?ListPages
-          ! Start of "Control Event Handling"
-          ! Generated Code
         OF ?BorderRegion
-          ! Start of "Control Event Handling"
-          ! Generated Code
-          ! End of "Control Event Handling"
         END
-        ReturnValue = PARENT.TakeAccepted()
-        CASE ACCEPTED()
+        ReturnValue = parent.TakeAccepted()
+        
+        case Accepted()
         OF ?PrintAllButton
             ThisWindow.Update()
             ToPrint.ToPrinter( true )
@@ -656,25 +618,25 @@ Looped          BYTE
     
     RETURN ReturnValue
     
-!* END *
+! -------------------------------------------------------------------------------------------------
 ! ThisWindow.TakeCloseEvent()
-
+! -------------------------------------------------------------------------------------------------
 ThisWindow.TakeCloseEvent PROCEDURE
 ReturnValue          BYTE,AUTO
     CODE
     ReturnValue = PARENT.TakeCloseEvent()
     RETURN ReturnValue
 
-!* END *
+! -------------------------------------------------------------------------------------------------
 ! ThisWindow.TakeDisableButton( SIGNED Control, BYTE MakeDisable )
-
+! -------------------------------------------------------------------------------------------------
 ThisWindow.TakeDisableButton    procedure( SIGNED Control,BYTE MakeDisable )
     CODE
     PARENT.TakeDisableButton(Control,MakeDisable)
 
-!* END *
+! -------------------------------------------------------------------------------------------------
 ! ThisWindow.TakeEvent()
-
+! -------------------------------------------------------------------------------------------------
 ThisWindow.TakeEvent    procedure()
 ReturnValue             BYTE,AUTO
 Looped                  BYTE
@@ -692,9 +654,9 @@ Looped                  BYTE
     ReturnValue = Level:Fatal
     RETURN ReturnValue
     
-!* END *
+! -------------------------------------------------------------------------------------------------
 ! ThisWindow.TakeFieldEvent()
-
+! -------------------------------------------------------------------------------------------------
 ThisWindow.TakeFieldEvent       procedure()
 ReturnValue         BYTE,AUTO
 Looped              BYTE
@@ -707,207 +669,96 @@ Looped              BYTE
         END
         CASE FIELD()
             OF ?ActionGroup
-            ! Start of "Control Handling"
-            ! Generated Code
             OF ?PrintAllButton
-            ! Start of "Control Handling"
                 CASE EVENT()
                 OF EVENT:Selecting
-                    ! Start of "Control Event Handling"
-                    ! Generated Code
-                    ! End of "Control Event Handling"
                 END
-            ! Generated Code
             OF ?PrintOneButton
-                ! Start of "Control Handling"
                 CASE EVENT()
                 OF EVENT:Selecting
-                    ! Start of "Control Event Handling"
-                    ! Generated Code
-                    ! End of "Control Event Handling"
                 END
-                ! Generated Code
           OF ?CancelButton
-            ! Start of "Control Handling"
             CASE EVENT()
             OF EVENT:Selecting
-              ! Start of "Control Event Handling"
-              ! Generated Code
-              ! End of "Control Event Handling"
             END
-            ! Generated Code
           OF ?NavigationGroup
-            ! Start of "Control Handling"
-            ! Generated Code
           OF ?JumpFirstButton
-            ! Start of "Control Handling"
             CASE EVENT()
             OF EVENT:Selecting
-              ! Start of "Control Event Handling"
-              ! Generated Code
-              ! End of "Control Event Handling"
             END
-            ! Generated Code
           OF ?JumpPrevButton
-            ! Start of "Control Handling"
             CASE EVENT()
             OF EVENT:Selecting
-              ! Start of "Control Event Handling"
-              ! Generated Code
-              ! End of "Control Event Handling"
             END
-            ! Generated Code
           OF ?JumpNextButton
-            ! Start of "Control Handling"
             CASE EVENT()
             OF EVENT:Selecting
-              ! Start of "Control Event Handling"
-              ! Generated Code
-              ! End of "Control Event Handling"
             END
-            ! Generated Code
           OF ?JumpLastButton
-            ! Start of "Control Handling"
             CASE EVENT()
             OF EVENT:Selecting
-              ! Start of "Control Event Handling"
-              ! Generated Code
-              ! End of "Control Event Handling"
             END
-            ! Generated Code
           OF ?WD:CurrentPage
-            ! Start of "Control Handling"
             CASE EVENT()
             OF EVENT:Selecting
-              ! Start of "Control Event Handling"
-              ! Generated Code
-              ! End of "Control Event Handling"
             END
-            ! Generated Code
           OF ?OfString
-            ! Start of "Control Handling"
-            ! Generated Code
           OF ?WD:ShowPageList
-            ! Start of "Control Handling"
             CASE EVENT()
             OF EVENT:Selecting
-              ! Start of "Control Event Handling"
-              ! Generated Code
-              ! End of "Control Event Handling"
             END
-            ! Generated Code
           OF ?ZoomGroup
-            ! Start of "Control Handling"
-            ! Generated Code
           OF ?ZoomInButton
-            ! Start of "Control Handling"
             CASE EVENT()
             OF EVENT:Selecting
-              ! Start of "Control Event Handling"
-              ! Generated Code
-              ! End of "Control Event Handling"
             END
-            ! Generated Code
           OF ?ZoomOutButton
-            ! Start of "Control Handling"
             CASE EVENT()
             OF EVENT:Selecting
-              ! Start of "Control Event Handling"
-              ! Generated Code
-              ! End of "Control Event Handling"
             END
-            ! Generated Code
           OF ?ZoomToPageWidth
-            ! Start of "Control Handling"
             CASE EVENT()
             OF EVENT:Selecting
-              ! Start of "Control Event Handling"
-              ! Generated Code
-              ! End of "Control Event Handling"
             END
-            ! Generated Code
           OF ?ZoomToPageHeight
-            ! Start of "Control Handling"
             CASE EVENT()
             OF EVENT:Selecting
-              ! Start of "Control Event Handling"
-              ! Generated Code
-              ! End of "Control Event Handling"
             END
-            ! Generated Code
           OF ?Zoom100Percent
-            ! Start of "Control Handling"
             CASE EVENT()
             OF EVENT:Selecting
-              ! Start of "Control Event Handling"
-              ! Generated Code
-              ! End of "Control Event Handling"
             END
-            ! Generated Code
           !OF ?PagesToPrintGroup
-            ! Start of "Control Handling"
-            ! Generated Code
           OF ?SearchGroup
-            ! Start of "Control Handling"
-            ! Generated Code
           OF ?WD:SearchString
-            ! Start of "Control Handling"
             CASE EVENT()
             OF EVENT:Selecting
-              ! Start of "Control Event Handling"
-              ! Generated Code
-              ! End of "Control Event Handling"
             END
-            ! Generated Code
           OF ?SearchButton
-            ! Start of "Control Handling"
             CASE EVENT()
             OF EVENT:Selecting
-              ! Start of "Control Event Handling"
-              ! Generated Code
-              ! End of "Control Event Handling"
             END
-            ! Generated Code
           OF ?WD:Percent
-            ! Start of "Control Handling"
           OF ?TogglePrintButton
-            ! Start of "Control Handling"
             CASE EVENT()
             OF EVENT:Selecting
-              ! Start of "Control Event Handling"
-              ! End of "Control Event Handling"
             END
-            ! Generated Code
           OF ?BorderBox
-            ! Start of "Control Handling"
           OF ?PageImage
-            ! Start of "Control Handling"
           OF ?ListPages
-            ! Start of "Control Handling"
             CASE EVENT()
             OF EVENT:Selecting
-              ! Start of "Control Event Handling"
             OF EVENT:AlertKey
-              ! Start of "Control Event Handling"
             OF EVENT:PreAlertKey
-              ! Start of "Control Event Handling"
-              ! End of "Control Event Handling"
             END
           OF ?BorderRegion
-            ! Start of "Control Handling"
             CASE EVENT()
             OF EVENT:MouseUp
-              ! Start of "Control Event Handling"
             OF EVENT:MouseIn
-              ! Start of "Control Event Handling"
             OF EVENT:MouseOut
-              ! Start of "Control Event Handling"
             OF EVENT:MouseMove
-              ! Start of "Control Event Handling"
-              ! End of "Control Event Handling"
             END
           OF ?ListboxPanel
-            ! Start of "Control Handling"
         END
           
         ReturnValue = PARENT.TakeFieldEvent()
@@ -963,9 +814,9 @@ Looped              BYTE
     
     RETURN ReturnValue
 
-!* END *
+! -------------------------------------------------------------------------------------------------
 ! ThisWindow.TakeWindowEvent()
-
+! -------------------------------------------------------------------------------------------------
 ThisWindow.TakeWindowEvent      procedure()
 ReturnValue         BYTE,AUTO
 Looped              BYTE
@@ -979,65 +830,25 @@ Looped              BYTE
 
         CASE EVENT()
         OF EVENT:AlertKey
-          ! Start of "Window Event Handling"
-          ! Generated Code
         OF EVENT:CloseDown
-          ! Start of "Window Event Handling"
-          ! Generated Code
         OF EVENT:CloseWindow
-          ! Start of "Window Event Handling"
-          ! Generated Code
         OF EVENT:Completed
-          ! Start of "Window Event Handling"
-          ! Generated Code
         OF EVENT:DoResize
-          ! Start of "Window Event Handling"
-          ! Generated Code
         OF EVENT:GainFocus
-          ! Start of "Window Event Handling"
-          ! Generated Code
         OF EVENT:Iconize
-          ! Start of "Window Event Handling"
-          ! Generated Code
         OF EVENT:Iconized
-          ! Start of "Window Event Handling"
-          ! Generated Code
         OF EVENT:LoseFocus
-          ! Start of "Window Event Handling"
-          ! Generated Code
         OF EVENT:Maximize
-          ! Start of "Window Event Handling"
-          ! Generated Code
         OF EVENT:Maximized
-          ! Start of "Window Event Handling"
-          ! Generated Code
         OF EVENT:Move
-          ! Start of "Window Event Handling"
-          ! Generated Code
         OF EVENT:Moved
-          ! Start of "Window Event Handling"
-          ! Generated Code
         OF EVENT:Notify
-          ! Start of "Window Event Handling"
-          ! Generated Code
         OF EVENT:OpenWindow
-          ! Start of "Window Event Handling"
-          ! Generated Code
         OF EVENT:PreAlertKey
-          ! Start of "Window Event Handling"
-          ! Generated Code
         OF EVENT:Restore
-          ! Start of "Window Event Handling"
-          ! Generated Code
         OF EVENT:Restored
-          ! Start of "Window Event Handling"
-          ! Generated Code
         OF EVENT:Size
-          ! Start of "Window Event Handling"
-          ! Generated Code
         OF EVENT:Sized
-          ! Start of "Window Event Handling"
-          ! Generated Code
         END
         ReturnValue = PARENT.TakeWindowEvent()
 
@@ -1068,9 +879,9 @@ Looped              BYTE
     ReturnValue = Level:Fatal
     RETURN ReturnValue
 
-!* END *
+! -------------------------------------------------------------------------------------------------
 ! ThisWindow.TakeNewSelection()
-
+! -------------------------------------------------------------------------------------------------
 ThisWindow.TakeNewSelection     procedure()
 ReturnValue         BYTE,AUTO
 Looped              BYTE
@@ -1083,11 +894,7 @@ Looped              BYTE
         END
         CASE FIELD()
         OF ?WD:CurrentPage
-            ! Start of "Control Event Handling"
-            ! Generated Code
         OF ?ListPages
-            ! Start of "Control Event Handling"
-            ! Generated Code
         END
         
         ReturnValue = PARENT.TakeNewSelection()
@@ -1108,10 +915,9 @@ Looped              BYTE
     ReturnValue = Level:Fatal
     RETURN ReturnValue
 
-!* END *
 ! -------------------------------------------------------------------------------------------------
 ! ThisWindow.Init()
-
+! -------------------------------------------------------------------------------------------------
 ThisWindow.Init     procedure()
 ReturnValue         BYTE,AUTO
     CODE
@@ -1156,22 +962,22 @@ ReturnValue         BYTE,AUTO
     
     TPVQueue.RenameMetaFiles()
 
-    GSV:BorderFEQ                 = ?BorderBox
-    GSV:ImageFEQ                  = ?PageImage
-    GSV:RegionFEQ                 = ?BorderRegion
+    GSV:BorderFEQ                   = ?BorderBox
+    GSV:ImageFEQ                    = ?PageImage
+    GSV:RegionFEQ                   = ?BorderRegion
     !GSV:BorderFEQ {PROP:Color}    = COLOR:Gray
-    GSV:BorderFEQ {PROP:Fill}     = COLOR:White
-    GSV:ImageFEQ  {PROP:Color}    = COLOR:White
-    GSV:ImageFEQ  {PROP:Text}     = PageQueue.WmfFile
+    GSV:BorderFEQ {PROP:Fill}       = COLOR:White
+    GSV:ImageFEQ  {PROP:Color}      = COLOR:White
+    GSV:ImageFEQ  {PROP:Text}       = PageQueue.WmfFile
 
-    GSV:ImageFEQ  {Prop:Hide}     = False
-    GSV:BorderFEQ {Prop:Hide}     = False
+    GSV:ImageFEQ  {Prop:Hide}       = false
+    GSV:BorderFEQ {Prop:Hide}       = false
     
-    GSV:ImageFEQ{ Prop:Scroll }    = True
+    GSV:ImageFEQ{ Prop:Scroll }     = true
 
-    PreviewWindow{ Prop:Pixels } = true
+    PreviewWindow{ Prop:Pixels }    = true
     GetClientArea()
-    PreviewWindow{ Prop:Pixels } = False                
+    PreviewWindow{ Prop:Pixels }    = false                
 
     TPageList.Init( ?ListPages, ?ListboxPanel )
     ?ListPages{ PROPLIST:DefHdrTextColor } = COLOR:Black
@@ -1196,26 +1002,26 @@ ReturnValue         BYTE,AUTO
     
     Tpre.DrawPage()    
      
-    RETURN ReturnValue
+    return ReturnValue
 
-!* END *
+! -------------------------------------------------------------------------------------------------
 ! ThisWindow.Run()
-
+! -------------------------------------------------------------------------------------------------
 ThisWindow.Run      procedure()
 ReturnValue         BYTE,AUTO
-    CODE
-    ReturnValue = PARENT.Run()
-    RETURN ReturnValue
+    code
+    ReturnValue = parent.Run()
+    return ReturnValue
 
-!* END *
+! -------------------------------------------------------------------------------------------------
 ! ThisWindow.Kill()
-
-ThisWindow.Kill     PROCEDURE()
-ReturnValue          BYTE,AUTO
-    CODE
+! -------------------------------------------------------------------------------------------------
+ThisWindow.Kill     procedure()
+ReturnValue         BYTE,AUTO
+    code
     TPButton.Done()
        
-    ReturnValue = PARENT.Kill()
+    ReturnValue = parent.Kill()
 
     GlobalErrors.SetProcedureName()
     
@@ -1225,13 +1031,12 @@ ReturnValue          BYTE,AUTO
        
     RETURN ReturnValue
 
-!* END *
 ! -------------------------------------------------------------------------------------------------
 ! GetFileSize( *cstring _fname ),long
-
+! -------------------------------------------------------------------------------------------------
 GetFileSize     procedure( *cstring _fname )!,long
-DQ              QUEUE(FILE:Queue),PRE(DQ)
-                END
+DQ              queue(FILE:Queue),pre(DQ)
+                end
 iSize           long                
     CODE
     iSize = 0
@@ -1242,29 +1047,29 @@ iSize           long
     Free(DQ)
     return iSize
 
-!* end *
+! -------------------------------------------------------------------------------------------------
 ! GetReportImageSize( *cstring _fname, *long _width, *long _height )
-
+! -------------------------------------------------------------------------------------------------
 GetReportImageSize      procedure( *cstring _fname, *long _width, *long _height )
-W         WINDOW
-          END
-TempImage LONG
-    CODE
+W         window
+          end
+TempImage long
+    code
     Open(W)
     
-        TempImage             = Create(0, CREATE:Image)
-        TempImage {PROP:Text} = _fname
-        0{PROP:Thous} = TRUE
-        _width  = TempImage{ PROP:Width  }
-        _height = TempImage{ PROP:Height }
-        0{PROP:Thous} = FALSE
-        Destroy(TempImage)
+    TempImage             = Create(0, CREATE:Image)
+    TempImage {PROP:Text} = _fname
+    0{PROP:Thous} = TRUE
+    _width  = TempImage{ PROP:Width  }
+    _height = TempImage{ PROP:Height }
+    0{PROP:Thous} = FALSE
+    Destroy(TempImage)
         
     Close(W)
     
-!* end *    
+! -------------------------------------------------------------------------------------------------
 ! GetClientArea()
-
+! -------------------------------------------------------------------------------------------------
 GetClientArea   procedure()
 cH              long
     code    
@@ -1278,9 +1083,9 @@ cH              long
     
     Destroy(cH)
 
-!* end *
+! -------------------------------------------------------------------------------------------------
 ! DeleteFile( *cstring _fname )
-
+! -------------------------------------------------------------------------------------------------
 DeleteFile              procedure( *cstring _fname )
 MX_DELETION_ATTEMPTS    EQUATE(5)       ! Define the maximum number of deletion attempts
 INVALID_FILE_ATTRIBUTES EQUATE(-1)      ! Define invalid file attributes
@@ -1290,95 +1095,94 @@ cnt       long                          ! Declare a long variable for the attemp
     code
     rc = API_DeleteFile( _fname )
 
-!* END *
 ! -------------------------------------------------------------------------------------------------
 ! TPreViewerClass.IncPage()
-
+! -------------------------------------------------------------------------------------------------
 TPreViewerClass.IncPage    procedure()
     code
     self.SetCurrentPage( self.CurrentPage + 1 )
     
-!* end *    
+! -------------------------------------------------------------------------------------------------
 ! TPreViewerClass.DecPage()
-
+! -------------------------------------------------------------------------------------------------
 TPreViewerClass.DecPage    procedure()
     code
     self.SetCurrentPage( self.CurrentPage - 1 )
     
-!* end *
+! -------------------------------------------------------------------------------------------------
 ! TPreViewerClass.JumpFirstPage()
-
+! -------------------------------------------------------------------------------------------------
 TPreViewerClass.JumpFirstPage  procedure()
-    CODE
+    code
     self.SetCurrentPage( 1 )
     self.DrawPage()
     self.WindowCtrl{Prop:VScrollPos} = 0
 
-!* end *
+! -------------------------------------------------------------------------------------------------
 ! TPreViewerClass.JumpLastPage()
-
+! -------------------------------------------------------------------------------------------------
 TPreViewerClass.JumpLastPage   procedure()
-    CODE
+    code
     self.SetCurrentPage( self.TotalPages )
     self.DrawPage()
     self.WindowCtrl{Prop:VScrollPos} = 255
     
-!* end *
+! -------------------------------------------------------------------------------------------------
 ! TPreViewerClass.JumpNextPage()
-
+! -------------------------------------------------------------------------------------------------
 TPreViewerClass.JumpNextPage   procedure()
-    CODE
-    If self.CurrentPage < self.TotalPages
+    code
+    if self.CurrentPage < self.TotalPages
         self.IncPage()
         self.DrawPage()
-    End
+    end
     
-!* end *    
+! -------------------------------------------------------------------------------------------------
 ! TPreViewerClass.JumpPreviousPage()
-
+! -------------------------------------------------------------------------------------------------
 TPreViewerClass.JumpPreviousPage   procedure()
-    CODE
-    IF self.CurrentPage > 1
+    code
+    if self.CurrentPage > 1
         self.DecPage()
         self.DrawPage()
-    END !* if *
+    end !* if *
 
-!* end *
+! -------------------------------------------------------------------------------------------------
 ! TPreViewerClass.ScrollUpPage()
-
+! -------------------------------------------------------------------------------------------------
 TPreViewerClass.ScrollUpPage   procedure()
-    CODE
-    IF self.CurrentPage > 1
-        IF GSV:ClientAreaWidth < (TImage.GetHeight() * (Tzoom.GetValue()/100))
-            IF self.WindowCtrl{Prop:VScrollPos} > 0
+    code
+    if self.CurrentPage > 1
+        if GSV:ClientAreaWidth < (TImage.GetHeight() * (Tzoom.GetValue()/100))
+            if self.WindowCtrl{Prop:VScrollPos} > 0
                 self.WindowCtrl{Prop:VScrollPos} = 0
-            ELSE
+            else
                 self.DecPage()                
                 self.DrawPage()
                 self.WindowCtrl{Prop:VScrollPos} = 255
-            END !* IF *
-        ELSE
+            end !* if *
+        else
             self.DecPage()
             self.DrawPage()
-        END !* IF *
-    ELSE
+        end !* if *
+    else
         self.WindowCtrl{Prop:VScrollPos} = 0
-    END !* IF *
+    end !* IF *
 
-!* end *
+! -------------------------------------------------------------------------------------------------
 ! TPreViewerClass.ScrollDownPage()
-
+! -------------------------------------------------------------------------------------------------
 TPreViewerClass.ScrollDownPage     procedure()
-    CODE
-    IF self.CurrentPage < self.TotalPages
-        If GSV:ClientAreaWidth < (TImage.GetHeight() * (Tzoom.GetValue()/100))
-            IF self.WindowCtrl{Prop:VScrollPos} < 255
+    code
+    if self.CurrentPage < self.TotalPages
+        if GSV:ClientAreaWidth < (TImage.GetHeight() * (Tzoom.GetValue()/100))
+            if self.WindowCtrl{Prop:VScrollPos} < 255
                 self.WindowCtrl{Prop:VScrollPos} = 255
-            ELSE
+            else
                 self.IncPage()
                 self.DrawPage()
                 self.WindowCtrl{Prop:VScrollPos} = 0
-            END !* IF *
+            end !* if *
         ELSE
             self.IncPage()
             self.DrawPage()
@@ -1387,9 +1191,9 @@ TPreViewerClass.ScrollDownPage     procedure()
         self.WindowCtrl{Prop:VScrollPos} = 255
     END !* IF *
 
-!* END *
+! -------------------------------------------------------------------------------------------------
 ! TPreViewerClass.ScrollUpabit()
-
+! -------------------------------------------------------------------------------------------------
 TPreViewerClass.ScrollUpabit       procedure()
 NewVSP      LONG
     CODE
@@ -1412,9 +1216,9 @@ NewVSP      LONG
         self.WindowCtrl{Prop:VScrollPos} = 0
     End
 
-!* end *
+! -------------------------------------------------------------------------------------------------
 ! TPreViewerClass.ScrollDownabit()
-
+! -------------------------------------------------------------------------------------------------
 TPreViewerClass.ScrollDownabit     procedure()
 NewVSP      LONG
     CODE
@@ -1437,10 +1241,9 @@ NewVSP      LONG
         self.WindowCtrl{Prop:VScrollPos} = 255
     end
 
-!* end *
 ! -------------------------------------------------------------------------------------------------
 ! TPreViewerClass.DrawPage()
-
+! -------------------------------------------------------------------------------------------------
 TPreViewerClass.DrawPage    procedure()
 cX                  Long
 xY                  Long
@@ -1502,49 +1305,48 @@ CurrHeight          long
         TPageList.Draw()
     END !* end *
 
-!* END *
+! -------------------------------------------------------------------------------------------------
 ! TPreViewerClass.GetTotalPages()
-
+! -------------------------------------------------------------------------------------------------
 TPreViewerClass.GetTotalPages       procedure()
     code
     return self.TotalPages
     
-!* END *
+
 ! -------------------------------------------------------------------------------------------------
 ! TPreViewerClass.GetCurrentPageFromQueue()
-
+! -------------------------------------------------------------------------------------------------
 TPreViewerClass.GetCurrentPageFromQueue    procedure()
     code
     get( PageQueue, self.CurrentPage )
     
-!* END *    
+! -------------------------------------------------------------------------------------------------  
 ! TPreViewerClass.GetCurrentImage(),*cstring
-
+! -------------------------------------------------------------------------------------------------
 TPreViewerClass.GetCurrentImage         procedure()
     code
     self.GetCurrentPageFromQueue()
     return PageQueue.WmfFile
     
-!* END *    
+! -------------------------------------------------------------------------------------------------
 ! TPreViewerClass.GetCurrentPage(),long
-
+! -------------------------------------------------------------------------------------------------
 TPreViewerClass.GetCurrentPage     procedure()!,long
     code
     return self.CurrentPage
     
-!* end * 
+! -------------------------------------------------------------------------------------------------
 ! TPreViewerClass.SetCurrentPage( long _page )
-
+! -------------------------------------------------------------------------------------------------
 TPreViewerClass.SetCurrentPage     procedure( long _page )
     code
     self.CurrentPage = _page
     WD.CurrentPage = self.CurrentPage
     display( ?WD:CurrentPage )
     
-!* end *    
 ! -------------------------------------------------------------------------------------------------
 ! TPreViewerClass.SearchText( *cstring _search_text ),long
-
+! -------------------------------------------------------------------------------------------------
 TPreViewerClass.SearchText  procedure( *cstring _search_text )!,long
 SearchWMF               FILE,DRIVER('DOS','/FILEBUFFERS=10'),PRE(WMF),CREATE
 Record                      RECORD
@@ -1616,9 +1418,9 @@ is_add                  long
     
     return self.found
       
-!* END *
+! -------------------------------------------------------------------------------------------------
 ! TPreViewerClass.FindFirst()
-
+! -------------------------------------------------------------------------------------------------
 TPreViewerClass.FindFirst    procedure()
 i               long
     code
@@ -1632,9 +1434,9 @@ i               long
         end !* if *
     end !* if *        
     
-!* end *
+! -------------------------------------------------------------------------------------------------
 ! TPreViewerClass.FindNext()
-
+! -------------------------------------------------------------------------------------------------
 TPreViewerClass.FindNext     procedure()
 i               long
     code
@@ -1647,9 +1449,9 @@ i               long
         end !* if *
     end !* if *        
     
-!* end *
+! -------------------------------------------------------------------------------------------------
 ! TPreViewerClass.FindPrev()
-
+! -------------------------------------------------------------------------------------------------
 TPreViewerClass.FindPrev     procedure()
 i               long
     code
@@ -1662,17 +1464,16 @@ i               long
         end !* if *
     end !* if *        
     
-!* end *
+! -------------------------------------------------------------------------------------------------
 ! TPreViewerClass.GetFound(),long
-
+! -------------------------------------------------------------------------------------------------
 TPreViewerClass.GetFound    procedure()!,long
     code
     return self.found
-    
-!* end *    
+       
 ! -------------------------------------------------------------------------------------------------
 ! TPreViewerClass.TagAllPages()
-
+! -------------------------------------------------------------------------------------------------
 TPreViewerClass.TagAllPages     procedure()
 i           long
     code
@@ -1683,9 +1484,9 @@ i           long
         put( PageQueue )
     end !* loop *
         
-!* end *
+! -------------------------------------------------------------------------------------------------
 ! TPreViewerClass.TagPagesFound()
-
+! -------------------------------------------------------------------------------------------------
 TPreViewerClass.TagPagesFound     procedure()
 i           long
     code
@@ -1696,9 +1497,9 @@ i           long
         put( PageQueue )
     end !* loop *
         
-!* end *
+! -------------------------------------------------------------------------------------------------
 ! TPreViewerClass.SearchReset()
-
+! -------------------------------------------------------------------------------------------------
 TPreViewerClass.SearchReset   procedure()
 i           long
     code
@@ -1713,10 +1514,9 @@ i           long
     self.WindowCtrl{ Prop:StatusText, 1 } = ''
     display( ?WD:SearchString )
         
-!* end *
 ! -------------------------------------------------------------------------------------------------
 ! TPreViewerClass.Init( *window _window )
-
+! -------------------------------------------------------------------------------------------------
 TPreViewerClass.Init   procedure( *window _window )
 i           long
     code   
@@ -1742,9 +1542,9 @@ i           long
             
     ?OfString{ Prop:Text } = ' / ' & Left( Format( self.GetTotalPages(), @n_6 ))    
     
-!* end *
+! -------------------------------------------------------------------------------------------------
 ! TPreViewerClass.Run(),long
-
+! -------------------------------------------------------------------------------------------------
 TPreViewerClass.Run    procedure()
 is_run      long
     code
@@ -1752,16 +1552,15 @@ is_run      long
     
     return is_run
     
-!* end *
+! -------------------------------------------------------------------------------------------------
 ! TPreViewerClass.Done()
-
+! -------------------------------------------------------------------------------------------------
 TPreViewerClass.Done       procedure()
     code    
     
-!* end * 
 ! -------------------------------------------------------------------------------------------------
 ! TToPrintClass.ToPrinter( long AllPages )
-
+! -------------------------------------------------------------------------------------------------
 TToPrintClass.ToPrinter    procedure( long AllPages )
 QPreV           queue(PreviewQueue)
                 end 
@@ -1774,8 +1573,8 @@ iCopies			SHORT
 Total           long
 S               cstring(1000)
 i 				LONG
-    CODE
-    OPEN(MyReport)
+    code
+    Open(MyReport)
     MyReport{PROP:THOUS}      = TRUE
     MyReport{PROP:Text}       = self.ReportJobName
     MyReport{Prop:Landscape}  = self.Landscape
@@ -1828,10 +1627,9 @@ i 				LONG
     PRINTER{ PROPPRINT:FromPage } = -1
     PRINTER{ PROPPRINT:ToPage   } = -1   
 
-!* END *
 ! -------------------------------------------------------------------------------------------------
 ! TToPrintClass.Init()
-
+! -------------------------------------------------------------------------------------------------
 TToPrintClass.Init      procedure()
 ReportRef               &REPORT
     code
@@ -1845,9 +1643,9 @@ ReportRef               &REPORT
     self.ReportWidth   = 0
     self.ReportHeight  = 0 
     
-!* end *    
+! -------------------------------------------------------------------------------------------------
 ! TToPrintClass.Run(),long
-
+! -------------------------------------------------------------------------------------------------
 TToPrintClass.Run       procedure()
 is_run      long
     code
@@ -1855,38 +1653,36 @@ is_run      long
     
     return is_run
        
-!* end *
+! -------------------------------------------------------------------------------------------------
 ! TToPrintClass.Done()
-
+! -------------------------------------------------------------------------------------------------
 TToPrintClass.Done      procedure()
     code
-    
-!* end *    
+      
 ! -------------------------------------------------------------------------------------------------
 ! TImageClass.GetWidth(),long
-
+! -------------------------------------------------------------------------------------------------
 TImageClass.GetWidth                procedure()!,long
     code
     return self.ImageWidth
 
-!* end *
+! -------------------------------------------------------------------------------------------------
 ! TImageClass.GetHeight(),long
-
+! -------------------------------------------------------------------------------------------------
 TImageClass.GetHeight               procedure()!,long
     code
     return self.ImageHeight
 
-!* end *
+! -------------------------------------------------------------------------------------------------
 ! TImageClass.GetAspect(),real
-
+! -------------------------------------------------------------------------------------------------
 TImageClass.GetAspect               procedure()!,real
     code
     return self.AspectRatio
 
-!* end *
 ! -------------------------------------------------------------------------------------------------
 ! TImageClass.Init( *cstring _fname )
-
+! -------------------------------------------------------------------------------------------------
 TImageClass.Init    procedure( *cstring _fname )
 TempImage           long
     code
@@ -1902,9 +1698,9 @@ TempImage           long
         
     self.AspectRatio = self.ImageHeight / self.ImageWidth
         
-!* END *
+! -------------------------------------------------------------------------------------------------
 ! TImageClass.Run(),long
-
+! -------------------------------------------------------------------------------------------------
 TImageClass.Run         procedure()!,long
 is_run     long
     code
@@ -1912,16 +1708,16 @@ is_run     long
     
     return is_run
     
-!* end *
+! -------------------------------------------------------------------------------------------------
 ! TImageClass.Done()
+! -------------------------------------------------------------------------------------------------
 
 TImageClass.Done            procedure()
     code
-    
-!* END *    
+      
 ! -------------------------------------------------------------------------------------------------
 ! TPButtonClass.GetArea()
-
+! -------------------------------------------------------------------------------------------------
 TPButtonClass.GetArea       procedure()
 pbX     Long
 pbY     Long
@@ -1936,9 +1732,9 @@ pbH     Long
     self.Yrange[2] = pbY + pbW
     PreviewWindow{ Prop:Pixels } = False    
     
-!* end *
+! -------------------------------------------------------------------------------------------------
 ! TPButtonClass.MouseOnArea()
-
+! -------------------------------------------------------------------------------------------------
 TPButtonClass.MouseOnArea   procedure()
 is_onarea       long
     code
@@ -1950,17 +1746,16 @@ is_onarea       long
     
     return is_onarea    
 
-!* END *
+! -------------------------------------------------------------------------------------------------
 ! TPButtonClass.SetHide( long _on )
-
+! -------------------------------------------------------------------------------------------------
 TPButtonClass.SetHide   procedure( long _on )
     code
     self.btnCtrl{ prop:hide } = _on
-    
-!* end *    
+      
 ! -------------------------------------------------------------------------------------------------
 ! TPButtonClass.Init( long _ctrl )
-
+! -------------------------------------------------------------------------------------------------
 TPButtonClass.Init      procedure( long _ctrl )
 i           long
     code
@@ -1978,9 +1773,9 @@ i           long
         self.Yrange[i] = 0
     end !* loop *
     
-!* end *
+! -------------------------------------------------------------------------------------------------
 ! TPButtonClass.Draw()
-
+! -------------------------------------------------------------------------------------------------
 TPButtonClass.Draw          procedure()
     CODE
     If PageQueue.PrintPage
@@ -1990,24 +1785,23 @@ TPButtonClass.Draw          procedure()
     END
     Tpre.GetCurrentPageFromQueue()
 
-!* END *
+! -------------------------------------------------------------------------------------------------
 ! TPButtonClass.Done()
-
+! -------------------------------------------------------------------------------------------------
 TPButtonClass.Done      procedure()
     code
     self.btnCtrl = 0
     
-!* end *
 ! -------------------------------------------------------------------------------------------------
 ! TPageListClass.GetPage()
-
+! -------------------------------------------------------------------------------------------------
 TPageListClass.GetPage      procedure()
     code
     GET( PageQueue, Choice(self.listCtrl) )
     
-!* END *    
+! -------------------------------------------------------------------------------------------------
 ! TPageListClass.GetArea()
-
+! -------------------------------------------------------------------------------------------------
 TPageListClass.GetArea      procedure()
 plX         Long
 plY         Long
@@ -2033,9 +1827,9 @@ aW          Long
     self.Yrange[2] = plY + plH
     PreviewWindow{ Prop:Pixels } = False    
     
-!* end *
+! -------------------------------------------------------------------------------------------------
 ! TPageListClass.MouseOnArea(),long
-
+! -------------------------------------------------------------------------------------------------
 TPageListClass.MouseOnArea   procedure()
 is_onarea       long
     code
@@ -2047,10 +1841,9 @@ is_onarea       long
     
     return is_onarea    
 
-!* END *
 ! -------------------------------------------------------------------------------------------------
 ! TPageListClass.Init( long _ctrl, long _panel )
-
+! -------------------------------------------------------------------------------------------------
 TPageListClass.Init     procedure( long _ctrl, long _panel )
 i           long
     code
@@ -2068,9 +1861,9 @@ i           long
     
     self.Draw()
     
-!* end *
+! -------------------------------------------------------------------------------------------------
 ! TPageListClass.Draw()
-
+! -------------------------------------------------------------------------------------------------
 TPageListClass.Draw     procedure()
     code
     IF WD.ShowPageList
@@ -2084,19 +1877,17 @@ TPageListClass.Draw     procedure()
         TPButton.SetHide( false )
     END !* if *
 
-!* END *
+! -------------------------------------------------------------------------------------------------
 ! TPageListClass.Done()
-
+! -------------------------------------------------------------------------------------------------
 TPageListClass.Done     procedure()
     code
     self.listCtrl = 0
     self.panelCtrl = 0
-       
-    
-!* end *
+
 ! -------------------------------------------------------------------------------------------------
 ! TSaveAsClass.Init()
-
+! -------------------------------------------------------------------------------------------------
 TSaveAsClass.Init   procedure()
 NumOpts             byte
 OutGeneratorName    cstring(255)
@@ -2127,9 +1918,9 @@ i                   long
         end !* loop *            
     end !* if *        
 
-!* END *
+! -------------------------------------------------------------------------------------------------
 ! TSaveAsClass.SetButtons()
-
+! -------------------------------------------------------------------------------------------------
 TSaveAsClass.SetButtons     procedure()
     code
     if not self.if_xml  then ?SaveAsXML { prop:disable } = true end
@@ -2139,17 +1930,17 @@ TSaveAsClass.SetButtons     procedure()
     if not self.if_png  then ?SaveAsPNG { prop:disable } = true end
     if not self.if_xls  then ?SaveAsXLS { prop:disable } = true end
     
-!* end *    
+! -------------------------------------------------------------------------------------------------
 ! TSaveAsClass.LoadPath()
-
+! -------------------------------------------------------------------------------------------------
 TSaveAsClass.LoadPath   procedure()
     code   
     !self.export_path = acc_getvar( self.CFG_GROUP, self.CFG_VALUE, '' )    
     SetPath( self.export_path )      
     
-!* end *
+! -------------------------------------------------------------------------------------------------
 ! TSaveAsClass.SavePath()
-
+! -------------------------------------------------------------------------------------------------
 TSaveAsClass.SavePath   procedure()
 strFullFN       cstring(1000)
 strDrive        cstring(255)
@@ -2165,9 +1956,9 @@ strTargetPath   cstring(1000)
         !acc_setvar( self.CFG_GROUP, self.CFG_VALUE, strTargetPath )
     end !* if *
        
-!* end *
+! -------------------------------------------------------------------------------------------------
 ! TSaveAsClass.SelectOutputFile()
-
+! -------------------------------------------------------------------------------------------------
 TSaveAsClass.SelectOutputFile   procedure()!,long
 strTarget       cstring(64)
 strFullFN       cstring(1000)
@@ -2198,9 +1989,9 @@ is_ok           long
     
     return is_ok 
     
-!* end *
+! -------------------------------------------------------------------------------------------------
 ! TSaveAsClass.Run( string _type )
-
+! -------------------------------------------------------------------------------------------------
 TSaveAsClass.Run        procedure( string _type )
 strTarget       cstring(256)
 returnValue     long
@@ -2254,16 +2045,15 @@ i               long
     
     return returnValue 
 
-!* END *
+! -------------------------------------------------------------------------------------------------
 ! TSaveAsClass.Done()
-
+! -------------------------------------------------------------------------------------------------
 TSaveAsClass.Done       procedure()
     code    
     
-!* end *    
 ! -------------------------------------------------------------------------------------------------
 ! TPVQueueClass.LoadPagesQueue()
-
+! -------------------------------------------------------------------------------------------------
 TPVQueueClass.LoadPagesQueue  procedure()
 recs        long
 i           long
@@ -2287,9 +2077,9 @@ i           long
     
     !Twait.Done()    
 
-!* END *
+! -------------------------------------------------------------------------------------------------
 ! TPVQueueClass.UnloadPagesQueue()
-
+! -------------------------------------------------------------------------------------------------
 TPVQueueClass.UnloadPagesQueue     procedure()
 i           long
 s           cstring(1000)
@@ -2309,10 +2099,9 @@ s           cstring(1000)
     
     TWait.Done()
     
-!* end *
 ! -------------------------------------------------------------------------------------------------
 ! TPVQueueClass.Init()
-
+! -------------------------------------------------------------------------------------------------
 TPVQueueClass.Init      procedure()
     code
     self.NewName &= new TQ_NewName
@@ -2321,9 +2110,9 @@ TPVQueueClass.Init      procedure()
     
     self.LoadPagesQueue()
     
-!* end *
+! -------------------------------------------------------------------------------------------------
 ! TPVQueueClass.RestoreMetaFiles()
-
+! -------------------------------------------------------------------------------------------------
 TPVQueueClass.RestoreMetaFiles      procedure()
 i           LONG
 S           CSTRING(1000)
@@ -2340,9 +2129,9 @@ D           CSTRING(1000)
     
     TWait.Done()
     
-!* end *
+! -------------------------------------------------------------------------------------------------
 ! TPVQueueClass.RenameMetaFiles()
-
+! -------------------------------------------------------------------------------------------------
 TPVQueueClass.RenameMetaFiles   procedure()
 BS          long                !! Location of backslash
 S           cstring(1000)
@@ -2374,9 +2163,9 @@ i           long
     
     TWait.Done()
 
-!* end *
+! -------------------------------------------------------------------------------------------------
 ! TPVQueueClass.RemoveMetaFiles()
-
+! -------------------------------------------------------------------------------------------------
 TPVQueueClass.RemoveMetaFiles      procedure()
 i           long
 S           cstring(1000)
@@ -2395,9 +2184,9 @@ S           cstring(1000)
     
     TWait.Done()
 
-!* end *
+! -------------------------------------------------------------------------------------------------
 ! TPVQueueClass.Done()
-
+! -------------------------------------------------------------------------------------------------
 TPVQueueClass.Done      procedure()
     code
     self.UnloadPagesQueue()
@@ -2408,5 +2197,4 @@ TPVQueueClass.Done      procedure()
         dispose( self.NewName )
     end !* if *
     
-!* end *
 ! -------------------------------------------------------------------------------------------------
