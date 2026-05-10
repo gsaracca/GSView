@@ -186,26 +186,26 @@ PreviewWindow WINDOW('GSoft - Previewer'),AT(,,751,235),CENTER,GRAY,IMM,MAX, |
 ! -------------------------------------------------------------------------------------------------
 ! ThisWindow : CLASS()
 ! -------------------------------------------------------------------------------------------------
-ThisWindow           CLASS(WindowManager)
-Init                    PROCEDURE(),BYTE,PROC,DERIVED
-Kill                    PROCEDURE(),BYTE,PROC,DERIVED
-Ask                     PROCEDURE(),DERIVED
-ChangeAction        	PROCEDURE(),BYTE,DERIVED
+ThisWindow              class(WindowManager)
+Init                        procedure(),BYTE,PROC,DERIVED
+Kill                        procedure(),BYTE,PROC,DERIVED
+Ask                         procedure(),DERIVED
+ChangeAction        	    procedure(),BYTE,DERIVED
 omit( '***', _C63_ )
-OnCloseEventCancelled   PROCEDURE(),DERIVED
+OnCloseEventCancelled       procedure(),DERIVED
 ***
-Reset                   PROCEDURE(BYTE Force=0),DERIVED
-Run                     PROCEDURE(),BYTE,PROC,DERIVED
-SetAlerts               PROCEDURE(),DERIVED
-Update                  PROCEDURE(),DERIVED
-TakeAccepted            PROCEDURE(),BYTE,PROC,DERIVED
-TakeFieldEvent          PROCEDURE(),BYTE,PROC,DERIVED
-TakeDisableButton       PROCEDURE(SIGNED Control,BYTE MakeDisable),DERIVED
-TakeCloseEvent          PROCEDURE(),BYTE,PROC,DERIVED
-TakeWindowEvent         PROCEDURE(),BYTE,PROC,DERIVED
-TakeNewSelection        PROCEDURE(),BYTE,PROC,DERIVED
-TakeEvent               PROCEDURE(),BYTE,PROC,DERIVED
-                     END
+Reset                       procedure(BYTE Force=0),DERIVED
+Run                         procedure(),BYTE,PROC,DERIVED
+SetAlerts                   procedure(),DERIVED
+Update                      procedure(),DERIVED
+TakeAccepted                procedure(),BYTE,PROC,DERIVED
+TakeFieldEvent              procedure(),BYTE,PROC,DERIVED
+TakeDisableButton           procedure(SIGNED Control,BYTE MakeDisable),DERIVED
+TakeCloseEvent              procedure(),BYTE,PROC,DERIVED
+TakeWindowEvent             procedure(),BYTE,PROC,DERIVED
+TakeNewSelection            procedure(),BYTE,PROC,DERIVED
+TakeEvent                   procedure(),BYTE,PROC,DERIVED
+                        end !* end *
 
 ! -------------------------------------------------------------------------------------------------
 ! TPreViewerClass : class()
@@ -276,36 +276,36 @@ Done                        procedure()
 ! -------------------------------------------------------------------------------------------------
 ! TImageClass   :   class()
 ! -------------------------------------------------------------------------------------------------
-TImageClass         class(),type
-ImageWidth              long,private
-ImageHeight             long,private
-AspectRatio             real,private
+TImageClass             class(),type
+ImageWidth                  long,private
+ImageHeight                 long,private
+AspectRatio                 real,private
 
-GetWidth                procedure(),long
-GetHeight               procedure(),long 
-GetAspect               procedure(),real
+GetWidth                    procedure(),long
+GetHeight                   procedure(),long 
+GetAspect                   procedure(),real
 
-Init                    procedure( *cstring _fname )
-Run                     procedure(),long
-Done                    procedure()
-                    end !* class *
+Init                        procedure( *cstring _fname )
+Run                         procedure(),long
+Done                        procedure()
+                        end !* class *
                     
 ! -------------------------------------------------------------------------------------------------
 ! TPButtonClass :   class()
 ! -------------------------------------------------------------------------------------------------
-TPButtonClass       class(),type
-btnCtrl                 long,private
-Xrange                  long,dim(2),private
-Yrange                  long,dim(2),private
+TPButtonClass           class(),type
+btnCtrl                     long,private
+Xrange                      long,dim(2),private
+Yrange                      long,dim(2),private
 
-GetArea                 procedure()
-MouseOnArea             procedure(),long
-SetHide                 procedure( long _on )
+GetArea                     procedure()
+MouseOnArea                 procedure(),long
+SetHide                     procedure( long _on )
 
-Init                    procedure( long _ctrl )
-Draw                    procedure()
-Done                    procedure()
-                    end !* class *
+Init                        procedure( long _ctrl )
+Draw                        procedure()
+Done                        procedure()
+                        end !* class *
 ! -------------------------------------------------------------------------------------------------
 ! TPageListClass : class()
 ! -------------------------------------------------------------------------------------------------
@@ -361,39 +361,39 @@ Done                        procedure()
 ! -------------------------------------------------------------------------------------------------
 ! TPVQueueClass : class
 ! -------------------------------------------------------------------------------------------------
-TQ_NewName      queue,type
-OldName             cstring(1000)
-NewName             cstring(1000)
-                end !* QUEUE *
+TQ_NewName              queue,type
+OldName                     cstring(1000)
+NewName                     cstring(1000)
+                        end !* queue *
 
-TPVQueueClass   class(),type
-NewName             &TQ_NewName,private
+TPVQueueClass           class(),type
+NewName                     &TQ_NewName,private
 
-LoadPagesQueue      procedure(),private
-UnloadPagesQueue    procedure(),private
+LoadPagesQueue              procedure(),private
+UnloadPagesQueue            procedure(),private
 
-RestoreMetaFiles    procedure()
-RenameMetaFiles     procedure()
-RemoveMetaFiles     procedure()
+RestoreMetaFiles            procedure()
+RenameMetaFiles             procedure()
+RemoveMetaFiles             procedure()
 
-Init                procedure()
-Done                procedure()
-                end !* class *
+Init                        procedure()
+Done                        procedure()
+                        end !* class *
                         
 ! -------------------------------------------------------------------------------------------------
 ! Instances
 ! -------------------------------------------------------------------------------------------------
-Toolbar             ToolbarClass
-TZoom               TZoomClass
-Tpre                TPreViewerClass
-TPrinter            TPrinterClass
-ToPrint             TToPrintClass
-TImage              TImageClass
-TPButton            TPButtonClass
-TPageList           TPageListClass
-TSaveAs             TSaveAsClass
-TPVQueue            TPVQueueClass
-TWait               TWaitClass
+Toolbar                 ToolbarClass
+TZoom                   TZoomClass
+Tpre                    TPreViewerClass
+TPrinter                TPrinterClass
+ToPrint                 TToPrintClass
+TImage                  TImageClass
+TPButton                TPButtonClass
+TPageList               TPageListClass
+TSaveAs                 TSaveAsClass
+TPVQueue                TPVQueueClass
+TWait                   TWaitClass
 ! -------------------------------------------------------------------------------------------------
     code
     clear( WD )         ! Clear Windows Data
