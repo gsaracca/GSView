@@ -9,7 +9,7 @@ GS_PRINTER_ENUM_REMOTE      EQUATE(00000010)
 GS_PRINTER_ENUM_SHARED      EQUATE(00000020)
 GS_PRINTER_ENUM_NETWORK     EQUATE(00000040)
 
-PRN_DEFAULT_PDF 		    CSTRING('Microsoft Print to PDF')
+PRN_DEFAULT_PDF             CSTRING('Microsoft Print to PDF')
 
 SECTION('types')
 
@@ -28,9 +28,9 @@ DeviceName                  CSTRING(256)    ! Full device name
 IsLocal                     Byte
                         END !* QUEUE *                        
 
-TQ_PRINTERS				QUEUE,TYPE
-PrinterName 				like(TPrinterName)
-						END !* QUEUE *
+TQ_PRINTERS		QUEUE,TYPE
+PrinterName 		    like(TPrinterName)
+			END !* QUEUE *
 
 SECTION('vars')
                         
