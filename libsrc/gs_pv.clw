@@ -56,14 +56,16 @@ QPrinters               TQ_PRINTERS
 ! -------------------------------------------------------------------------------------------------
 ! DATA
 ! -------------------------------------------------------------------------------------------------
-GSV:Response            BYTE
+GSV                     group,pre(GSV)
+Response                    byte
 
-GSV:ClientAreaWidth     LONG
-GSV:ClientAreaHeight    LONG
+ClientAreaWidth             long
+ClientAreaHeight            long
 
-GSV:BorderFEQ           LONG
-GSV:ImageFEQ            LONG
-GSV:RegionFEQ           LONG
+BorderFEQ                   long
+ImageFEQ                    long
+RegionFEQ                   long
+                        end !* group *
              
 ! -------------------------------------------------------------------------------------------------
 ! WINDOW - PREVIEWER
