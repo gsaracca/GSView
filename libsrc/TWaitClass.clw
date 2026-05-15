@@ -11,7 +11,7 @@
         map
         end !* map *
 
-include( 'TWaitClass.inc'),once
+include( 'TWaitClass.inc' ),once
 
 ! WINDOW - WAIT
 ! -----------------------------------------------------------------------------

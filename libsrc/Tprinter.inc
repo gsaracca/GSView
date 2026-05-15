@@ -7,7 +7,7 @@ _TPRINTER_PRESENT_  EQUATE(1)
 
 include( 'TPRN_TYPES.CLW', 'types' ),once
                                  
-TPrinterClass           class,type,module('TPrinter.clw'),link('TPrinter.clw')
+TPrinterClass           class,type,module( 'TPrinter.clw' ),link( 'TPrinter.clw' )
 default_printer             like(TprinterName),private
 save_default                like(TPrinterName),private
 ifFile                      long,private

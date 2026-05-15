@@ -12,7 +12,7 @@ Value                       long
   OMIT('_EndOfInclude_', _TZOOM_PRESENT_ )
 _TZOOM_PRESENT_     EQUATE(1)
 
-TZoomClass          class,type,module('ZoomModule.clw'),link('ZoomModule.clw')
+TZoomClass          class,type,module( 'ZoomModule.clw' ),link( 'ZoomModule.clw' )
 Zoom                    byte,private            ! Zoom on MouseRight or MouseLeft
 ZoomValue               long,private            ! Current Zoom Value
 ZoomState               long,private            ! Pointer to Current Zoom Queue 

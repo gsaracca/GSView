@@ -8,7 +8,7 @@
   OMIT('_EndOfInclude_', _TPERCENT_PRESENT_ )
 _TPERCENT_PRESENT_  EQUATE(1)
 
-TPercentClass       class(),type,module('PercentModule.clw'),link('PercentModule.clw')
+TPercentClass       class(),type,module( 'PercentModule.clw' ),link( 'PercentModule.clw' )
 Percent                 long,private
 Counter                 long,private
 RecCounter              long,private
